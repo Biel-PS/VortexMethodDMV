@@ -46,16 +46,18 @@ def Calc_panel (cordMatrix,N):
                     cache_x = cordMatrix[cont_k,cont_i]
                     cont_i = 1
                 else:
-                    delta_z = cordMatrix[cont_k, cont_i] - cache_x
+                    delta_z = cordMatrix[cont_k, cont_i] - cache_z
                     zo = cache_z
                     cache_z = cordMatrix[cont_k, cont_i]
                     cont_i = 0
+
             panel_chord = np.sqrt(delta_z**2 + delta_x**2)
             vec_normal = (-delta_z/panel_chord,delta_x/panel_chord)
             vec_tangent = (delta_x/panel_chord,delta_z/panel_chord)
+
             pos_lumpedVortex = xo + (0.25*panel_chord)*np.transpose(vec_tangent)
             pos_controlpoint = xo + (0.75 * panel_chord) * np.transpose(vec_tangent)
-            conjunto = np.array([pos_lumpedVortex,pos_controlpoint])
+            conjunto = np.array([np.transpose(vec_normal),np.transpose(vec_tangent),pos_lumpedVortex,pos_controlpoint])
             property_panel.append([cont_k,conjunto])
 
         cont_k += 1
