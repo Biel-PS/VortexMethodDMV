@@ -52,11 +52,14 @@ def Calc_panel (cordMatrix,N):
                     cont_i = 0
 
             panel_chord = np.sqrt(delta_z**2 + delta_x**2)
+
             vec_normal = (-delta_z/panel_chord,delta_x/panel_chord)
+
             vec_tangent = (delta_x/panel_chord,delta_z/panel_chord)
 
             pos_lumpedVortex = xo + (0.25*panel_chord)*np.transpose(vec_tangent)
             pos_controlpoint = xo + (0.75 * panel_chord) * np.transpose(vec_tangent)
+
             conjunto = np.array([np.transpose(vec_normal),np.transpose(vec_tangent),pos_lumpedVortex,pos_controlpoint])
             property_panel.append(conjunto)
 
@@ -66,7 +69,8 @@ def Calc_panel (cordMatrix,N):
 def Iteration_Process(panelMatrix, N):
     a = np.zeros((len(panelMatrix),len(panelMatrix)))
     RHS = np.zeros((len(panelMatrix),1))
-    angle = np.transpose([-np.cos(par.alfa),-np.sin(par.alfa)])
+    angle = [-np.cos(par.alfa),-np.sin(par.alfa)]
+    #print(f"angle: ", angle)
     for i in range(0,len(panelMatrix)):
 
         for j in range(0,len(panelMatrix)):
@@ -74,7 +78,16 @@ def Iteration_Process(panelMatrix, N):
             u = (panelMatrix[i][3][1]-panelMatrix[j][2][1])/(2*np.pi*r2)
             w = (panelMatrix[i][3][0]-panelMatrix[j][2][0])/(2*np.pi*r2)
             velocity = np.array([u,w])
-            a[i][j] = np.dot(np.transpose(velocity),panelMatrix[i][0])
-    RHS[i] = np.dot(angle,panelMatrix[i][0])
-    return a,RHS
+            a[j][i] = np.dot(np.transpose(velocity),panelMatrix[i][0])
+        RHS[i] = np.dot(angle,panelMatrix[i][0])
+        #print(f"normal: ", panelMatrix[i][0])
 
+    return a,RHS
+def Circuilation_Calc (a,RHS):
+    return np.matmul(np.linalg.inv(a),RHS)
+
+def Lift_Coeficient (circulation):
+    Cl = 0
+    for i in range(0,len(circulation)):
+        Cl += circulation[i]
+    return Cl
