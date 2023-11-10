@@ -63,3 +63,8 @@ def Calc_panel (cordMatrix,N):
         cont_k += 1
     return property_panel
 
+def Iteration_Process(coordMatrix, panelMatrix, N):
+    for i in range(0,len(panelMatrix)):
+        for j in range(0,len(panelMatrix)):
+            a = 0
+
