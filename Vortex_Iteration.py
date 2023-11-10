@@ -58,13 +58,23 @@ def Calc_panel (cordMatrix,N):
             pos_lumpedVortex = xo + (0.25*panel_chord)*np.transpose(vec_tangent)
             pos_controlpoint = xo + (0.75 * panel_chord) * np.transpose(vec_tangent)
             conjunto = np.array([np.transpose(vec_normal),np.transpose(vec_tangent),pos_lumpedVortex,pos_controlpoint])
-            property_panel.append([cont_k,conjunto])
+            property_panel.append(conjunto)
 
         cont_k += 1
     return property_panel
 
-def Iteration_Process(coordMatrix, panelMatrix, N):
+def Iteration_Process(panelMatrix, N):
+    a = np.zeros((len(panelMatrix),len(panelMatrix)))
+    RHS = np.zeros((len(panelMatrix),1))
+    angle = np.transpose([-np.cos(par.alfa),-np.sin(par.alfa)])
     for i in range(0,len(panelMatrix)):
+
         for j in range(0,len(panelMatrix)):
-            a = 0
+            r2 = (panelMatrix[i][3][0]-panelMatrix[j][2][0])**2+(panelMatrix[i][3][1]-panelMatrix[j][2][1])**2 #r^2 = (xi-xj)^2 +(zi-zj)^2
+            u = (panelMatrix[i][3][1]-panelMatrix[j][2][1])/(2*np.pi*r2)
+            w = (panelMatrix[i][3][0]-panelMatrix[j][2][0])/(2*np.pi*r2)
+            velocity = np.array([u,w])
+            a[i][j] = np.dot(np.transpose(velocity),panelMatrix[i][0])
+    RHS[i] = np.dot(angle,panelMatrix[i][0])
+    return a,RHS
 
