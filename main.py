@@ -4,23 +4,20 @@ import Vortex_Iteration as vi
 import numpy as np
 
 N = par.M + 1 #Nombre de punts
-N = 5
+N = 100
 coord = np.zeros((N+1,2)) #files columnes; x y
 
 par.Parameters_definition()
-vi.Calc_coord_UNIFORM(coord,par.f,N)
-print(coord)
-print("next")
+vi.Calc_coord_Cosinus(coord,par.f,N)
+
 #vi.Calc_coord_Cosinus(coord,par.f,N)
 #print(coord)
-infoMatrix = vi.Calc_panel(coord,N)
 
-print(infoMatrix) #VECTOR NORMAL, VECTOR TANGENTE,X LUMPED VORTEX, X CONTROL POINT
-"""print("general")
-print(infoMatrix[0])
-print("concreto")
-print(infoMatrix[0][2])"""
-print("neeext")
+infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE,X LUMPED VORTEX, X CONTROL POINT
 coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,N)
-print(coefMatrix)
-print(RHSmatrix)
+Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
+Cl = vi.Lift_Coeficient(Circulation)
+print(Cl)
+print(f"RHS: ",RHSmatrix)
+print(f"A: ", coefMatrix)
+print(f"Circulacion: ",Circulation)
