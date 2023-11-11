@@ -17,7 +17,8 @@ infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE,X LUMPED VORT
 coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,N)
 Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
 Cl = vi.Lift_Coeficient(Circulation)
-print(Cl)
-print(f"RHS: ",RHSmatrix)
+
+print(f"infomatrix: ",infoMatrix[0])
 print(f"A: ", coefMatrix)
 print(f"Circulacion: ",Circulation)
+print(f"Cl: ",Cl)

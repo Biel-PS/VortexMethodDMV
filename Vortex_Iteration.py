@@ -69,7 +69,8 @@ def Calc_panel (cordMatrix,N):
 def Iteration_Process(panelMatrix, N):
     a = np.zeros((len(panelMatrix),len(panelMatrix)))
     RHS = np.zeros((len(panelMatrix),1))
-    angle = [-np.cos(par.alfa),-np.sin(par.alfa)]
+    angle = [np.cos(par.alfa),np.sin(par.alfa)]
+    print(angle)
     #print(f"angle: ", angle)
     for i in range(0,len(panelMatrix)):
 
@@ -89,5 +90,5 @@ def Circuilation_Calc (a,RHS):
 def Lift_Coeficient (circulation):
     Cl = 0
     for i in range(0,len(circulation)):
-        Cl += circulation[i]
+        Cl += 2*circulation[i]
     return Cl

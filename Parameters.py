@@ -7,7 +7,7 @@ def Parameters_definition():
     naca = (0,0,0,0) #input("Insert NACA series:")
     f = int(naca[0])/100 #Maximum camber
     p = int(naca[1])/10 #position of maximum camber
-    alfa = 1
+    alfa = 4 *(np.pi/180)
 
     """ alfa = int(input("Insert angle of attack in degrees: ")) #angle of attack of the analysis, degrees
      xh = int(input("Insert the hinge position in % of chord: "))#position of the hinge
