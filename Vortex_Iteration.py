@@ -2,7 +2,7 @@ import numpy as np
 
 import Parameters as par
 
-def Calc_coord_UNIFORM (cordMatrix,f,N):
+def Calc_coord_UNIFORM (cordMatrix,f,N): #Create the node points using a linal aprixmation
     cont = 0
     step = 1/N
     for x in np.arange(0.0,1.000001,step):
@@ -14,24 +14,24 @@ def Calc_coord_UNIFORM (cordMatrix,f,N):
             cordMatrix[cont,1] = (par.f/(1-par.p**2))*((1-2*par.p)+2*par.p*x-x**2)
         cont +=1
 
-def Calc_coord_Cosinus (cordMatrix,f,N):
+def Calc_coord_Cosinus (cordMatrix,f,N): #Create the node points using an angular cosinus aproximation
     cont = 0
     Control = True
     while Control:
         x = 0.5*(1-np.cos(np.pi*(cont)/(N)))
-        if x < f:
+        if x < f: #First parabola deffined by the naca 4 digit standard
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/par.p**2)*(2*par.p*x-x**2)
-        elif x >= f and x<0.99999999:
+        elif x >= f and x<0.99999999:#second parabola deffined by the naca 4 digit standard
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/(1-par.p**2))*((1-2*par.p)+2*par.p*x-x**2)
-        else:
+        else: #Last node is TE of the airfoil
             cordMatrix[cont, 0] = 1
             cordMatrix[cont, 1] = (par.f / (1 - par.p ** 2)) * ((1 - 2 * par.p) -1 + 2 * par.p )
             Control = False
         cont += 1
 
-def Calc_panel (cordMatrix,N):
+def Calc_panel (cordMatrix,N): #Define the panel as a plain segmen between two nodes
     cont_i = 0
     cont_k = 0
     cache_x = 0
@@ -53,20 +53,20 @@ def Calc_panel (cordMatrix,N):
 
             panel_chord = np.sqrt(delta_z**2 + delta_x**2)
 
-            vec_normal = (-delta_z/panel_chord,delta_x/panel_chord)
+            vec_normal = (-delta_z/panel_chord,delta_x/panel_chord) #vector normal to the segment
 
-            vec_tangent = (delta_x/panel_chord,delta_z/panel_chord)
+            vec_tangent = (delta_x/panel_chord,delta_z/panel_chord)#vector tangent to the segment
 
-            pos_lumpedVortex = xo + (0.25*panel_chord)*np.transpose(vec_tangent)
-            pos_controlpoint = xo + (0.75 * panel_chord) * np.transpose(vec_tangent)
+            pos_lumpedVortex = xo + (0.25*panel_chord)*np.transpose(vec_tangent) #postion of the vortex in one segment (0,25 of the panel lenght)
+            pos_controlpoint = xo + (0.75 * panel_chord) * np.transpose(vec_tangent) #postion of the control point of the segment (0,75 of the panel lenght)
 
             conjunto = np.array([np.transpose(vec_normal),np.transpose(vec_tangent),pos_lumpedVortex,pos_controlpoint])
-            property_panel.append(conjunto)
+            property_panel.append(conjunto) #create a matrix with all the paramenters of every panel
 
         cont_k += 1
-    return property_panel
+    return property_panel #retrun property matrix
 
-def Iteration_Process(panelMatrix, N):
+def Iteration_Process(panelMatrix, N): #proces to obtain the matrixes of the circulation equation
     a = np.zeros((len(panelMatrix),len(panelMatrix)))
     RHS = np.zeros((len(panelMatrix),1))
     angle = [np.cos(par.alfa),np.sin(par.alfa)]
@@ -83,11 +83,11 @@ def Iteration_Process(panelMatrix, N):
         RHS[i] = np.dot(angle,panelMatrix[i][0])
         #print(f"normal: ", panelMatrix[i][0])
 
-    return a,RHS
-def Circuilation_Calc (a,RHS):
+    return a,RHS #return matrix of parameters and result
+def Circuilation_Calc (a,RHS): #obtain the circulation matrix solving the matricial equation
     return np.matmul(np.linalg.inv(a),RHS)
 
-def Lift_Coeficient (circulation):
+def Lift_Coeficient (circulation): #Calcule the cl using the circulation matrix
     Cl = 0
     for i in range(0,len(circulation)):
         Cl += 2*circulation[i]
