@@ -70,7 +70,7 @@ def Iteration_Process(panelMatrix, N):
     a = np.zeros((len(panelMatrix),len(panelMatrix)))
     RHS = np.zeros((len(panelMatrix),1))
     angle = [np.cos(par.alfa),np.sin(par.alfa)]
-    print(angle)
+    #print(angle)
     #print(f"angle: ", angle)
     for i in range(0,len(panelMatrix)):
 
