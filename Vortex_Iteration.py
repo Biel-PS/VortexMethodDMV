@@ -2,27 +2,27 @@ import numpy as np
 
 import Parameters as par
 
-def Calc_coord_UNIFORM (cordMatrix,f,N): #Create the node points using a linal aprixmation
+def Calc_coord_UNIFORM (cordMatrix,p,N): #Create the node points using a linal aprixmation
     cont = 0
     step = 1/N
     for x in np.arange(0.0,1.000001,step):
-        if x < f:
+        if x < p:
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/par.p**2)*(2*par.p*x-x**2)
-        elif x >= f:
+        elif x >= p:
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/(1-par.p**2))*((1-2*par.p)+2*par.p*x-x**2)
         cont +=1
 
-def Calc_coord_Cosinus (cordMatrix,f,N): #Create the node points using an angular cosinus aproximation
+def Calc_coord_Cosinus (cordMatrix,p,N): #Create the node points using an angular cosinus aproximation
     cont = 0
     Control = True
     while Control:
         x = 0.5*(1-np.cos(np.pi*(cont)/(N)))
-        if x < f: #First parabola deffined by the naca 4 digit standard
+        if x < p: #First parabola deffined by the naca 4 digit standard
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/par.p**2)*(2*par.p*x-x**2)
-        elif x >= f and x<0.99999999:#second parabola deffined by the naca 4 digit standard
+        elif x >= p and x<0.99999999:#second parabola deffined by the naca 4 digit standard
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/(1-par.p**2))*((1-2*par.p)+2*par.p*x-x**2)
         else: #Last node is TE of the airfoil

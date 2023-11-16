@@ -7,8 +7,8 @@ import numpy as np
 N = par.M + 1 #Nombre de punts
 coord = np.zeros((N+1,2)) #files columnes; x y
 par.Parameters_definition()
-vi.Calc_coord_Cosinus(coord,par.f,N)
-#vi.Calc_coord_Cosinus(coord,par.f,N)
+vi.Calc_coord_Cosinus(coord,par.p,N)
+#vi.Calc_coord_Cosinus(coord,par.p,N)
 #print(coord)
 cont = 0
 start =-16
