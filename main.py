@@ -14,9 +14,9 @@ cont = 0
 start =-16
 finish = 16
 step = 2
-lenght = np.abs(start)+np.abs(finish)+np.abs(step)
-angle = np.zeros((lenght,1))
-Cl = np.zeros((lenght,1))
+lenght = np.abs(start/step)+np.abs(finish/step) + 1
+angle = np.zeros((int(lenght),1))
+Cl = np.zeros((int(lenght),1))
 
 for i in range(start,finish+step,step):
     par.alfa = i*(np.pi/180)
@@ -40,7 +40,7 @@ plt.title('Cl vs atack angle')
 plt.xlabel('Atack angle (deg)')
 plt.ylabel('Cl')
 plt.show()
-
+print(Cl)
 """print(f"infomatrix: ",infoMatrix[0])
 print(f"A: ", coefMatrix)
 print(f"Circulacion: ",Circulation)

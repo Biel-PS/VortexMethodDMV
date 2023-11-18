@@ -4,7 +4,7 @@ import numpy as np
 f,p,alfa,xh,eta = 0.,0.,0.,0.,0.
 def Parameters_definition():
     global f,p,alfa,xh,eta
-    naca = (0,0,0,0) #input("Insert NACA series:")
+    naca = (2,3,0,0) #input("Insert NACA series:")
     f = int(naca[0])/100 #Maximum camber
     p = int(naca[1])/10 #position of maximum camber
     angle = 4  #atack angle in degrees
