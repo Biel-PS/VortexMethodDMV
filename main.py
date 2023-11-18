@@ -40,7 +40,7 @@ plt.title('Cl vs atack angle')
 plt.xlabel('Atack angle (deg)')
 plt.ylabel('Cl')
 plt.show()
-print(Cl)
+
 """print(f"infomatrix: ",infoMatrix[0])
 print(f"A: ", coefMatrix)
 print(f"Circulacion: ",Circulation)
