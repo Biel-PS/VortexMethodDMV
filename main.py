@@ -46,4 +46,4 @@ print(f"A: ", coefMatrix)
 print(f"Circulacion: ",Circulation)
 """
 #coment
-#AAAAA
+#HOLA ja em funciona biel (Soc el pau)
