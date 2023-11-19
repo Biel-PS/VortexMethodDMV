@@ -7,7 +7,7 @@ import numpy as np
 N = par.M #Nombre de punts
 coord = np.zeros((N+1,2)) #files columnes; x y
 par.Parameters_definition()
-vi.Calc_coord_UNIFORM(coord,par.p,N,par.xh)
+vi.Calc_coord_Cosinus(coord,par.p,N,par.xh)
 #vi.Calc_coord_Cosinus(coord,par.p,N)
 #print(coord)
 cont = 0
@@ -34,7 +34,7 @@ for i in range(start,finish+step,step):
 """
     Cl[cont]=(vi.Lift_Coeficient(Circulation))
     angle[cont] = i
-    print(angle[cont],Cl[cont])
+    #print(angle[cont],Cl[cont])
     cont += 1
 
 """print(coord)
