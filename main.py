@@ -7,7 +7,7 @@ import numpy as np
 N = par.M #Nombre de punts
 coord = np.zeros((N+1,2)) #files columnes; x y
 par.Parameters_definition()
-vi.Calc_coord_UNIFORM(coord,par.p,N)
+vi.Calc_coord_UNIFORM(coord,par.p,N,par.xh)
 #vi.Calc_coord_Cosinus(coord,par.p,N)
 #print(coord)
 cont = 0
@@ -37,7 +37,10 @@ for i in range(start,finish+step,step):
     print(angle[cont],Cl[cont])
     cont += 1
 
-
+"""print(coord)
+print(*zip(*coord))
+plt.scatter(*zip(*coord))
+plt.show()"""
 
 plt.plot(angle,Cl, color='black', linestyle='dashed', linewidth = 1,
          marker='o', markerfacecolor='black', markersize=4)
@@ -51,5 +54,4 @@ plt.show()
 print(f"A: ", coefMatrix)
 print(f"Circulacion: ",Circulation)
 """
-#coment
-#HOLA ja em funciona biel (Soc el pau)
+
