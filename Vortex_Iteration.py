@@ -88,7 +88,7 @@ def Circuilation_Calc (a,RHS): #obtain the circulation matrix solving the matric
    # print(np.matmul(np.linalg.inv(a), RHS))
     return np.matmul(np.linalg.inv(a),RHS)
 
-def Lift_Coeficient (circulation): #Calcule the cl using the circulation matrix
+def Lift_Coeficient (circulation): #Calculate the cl using the circulation matrix
     Cl = 0
     for i in range(0,len(circulation)):
         Cl += 2*circulation[i]
