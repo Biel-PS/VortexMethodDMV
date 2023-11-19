@@ -57,8 +57,8 @@ def Calc_panel (cordMatrix,N): #Define the panel as a plain segmen between two n
 
             vec_tangent = (delta_x/panel_chord,delta_z/panel_chord)#vector tangent to the segment
 
-            pos_lumpedVortex = xo + (0.25*panel_chord)*np.transpose(vec_tangent) #postion of the vortex in one segment (0,25 of the panel lenght)
-            pos_controlpoint = xo + (0.75 * panel_chord) * np.transpose(vec_tangent) #postion of the control point of the segment (0,75 of the panel lenght)
+            pos_lumpedVortex = [xo + (0.25*panel_chord)*vec_tangent[0],vec_tangent[1]+zo] #postion of the vortex in one segment (0,25 of the panel lenght)
+            pos_controlpoint = [xo + (0.75 * panel_chord)*vec_tangent[0],vec_tangent[1]+zo] #postion of the control point of the segment (0,75 of the panel lenght)
 
             conjunto = np.array([np.transpose(vec_normal),np.transpose(vec_tangent),pos_lumpedVortex,pos_controlpoint])
             property_panel.append(conjunto) #create a matrix with all the paramenters of every panel
@@ -69,7 +69,7 @@ def Calc_panel (cordMatrix,N): #Define the panel as a plain segmen between two n
 def Iteration_Process(panelMatrix, N): #proces to obtain the matrixes of the circulation equation
     a = np.zeros((len(panelMatrix),len(panelMatrix)))
     RHS = np.zeros((len(panelMatrix),1))
-    angle = [np.cos(par.alfa),np.sin(par.alfa)]
+    angle = [np.sin(par.alfa),np.cos(par.alfa)]
     #print(angle)
     #print(f"angle: ", angle)
     for i in range(0,len(panelMatrix)):
@@ -77,14 +77,15 @@ def Iteration_Process(panelMatrix, N): #proces to obtain the matrixes of the cir
         for j in range(0,len(panelMatrix)):
             r2 = (panelMatrix[i][3][0]-panelMatrix[j][2][0])**2+(panelMatrix[i][3][1]-panelMatrix[j][2][1])**2 #r^2 = (xi-xj)^2 +(zi-zj)^2
             u = (panelMatrix[i][3][1]-panelMatrix[j][2][1])/(2*np.pi*r2)
-            w = (panelMatrix[i][3][0]-panelMatrix[j][2][0])/(2*np.pi*r2)
+            w = -(panelMatrix[i][3][0]-panelMatrix[j][2][0])/(2*np.pi*r2)
             velocity = np.array([u,w])
-            a[j][i] = np.dot(np.transpose(velocity),panelMatrix[i][0])
-        RHS[i] = np.dot(angle,panelMatrix[i][0])
+            a[i][j] = np.dot(velocity,panelMatrix[i][0])#*np.pi*(1/N) #fila i ,columna j. si aquest fragment es multiplica, es compleix l'exemple de la diapo 12
+        RHS[i] = -np.dot(angle,panelMatrix[i][0]) *np.sin(par.alfa)
         #print(f"normal: ", panelMatrix[i][0])
 
     return a,RHS #return matrix of parameters and result
 def Circuilation_Calc (a,RHS): #obtain the circulation matrix solving the matricial equation
+   # print(np.matmul(np.linalg.inv(a), RHS))
     return np.matmul(np.linalg.inv(a),RHS)
 
 def Lift_Coeficient (circulation): #Calcule the cl using the circulation matrix

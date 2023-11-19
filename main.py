@@ -4,16 +4,17 @@ import Vortex_Iteration as vi
 import matplotlib.pyplot as plt
 import numpy as np
 
-N = par.M + 1 #Nombre de punts
+N = par.M #Nombre de punts
 coord = np.zeros((N+1,2)) #files columnes; x y
 par.Parameters_definition()
-vi.Calc_coord_Cosinus(coord,par.p,N)
+vi.Calc_coord_UNIFORM(coord,par.p,N)
 #vi.Calc_coord_Cosinus(coord,par.p,N)
 #print(coord)
 cont = 0
-start =-16
-finish = 16
-step = 2
+
+start =-10
+finish = 10
+step = 1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 angle = np.zeros((int(lenght),1))
 Cl = np.zeros((int(lenght),1))
@@ -26,6 +27,11 @@ for i in range(start,finish+step,step):
 
     Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
 
+    """print(infoMatrix)
+    print(coefMatrix)
+    print(RHSmatrix)
+    print(Circulation)
+"""
     Cl[cont]=(vi.Lift_Coeficient(Circulation))
     angle[cont] = i
     print(angle[cont],Cl[cont])
