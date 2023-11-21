@@ -75,7 +75,7 @@ def Calc_panel (cordMatrix,N): #Define the panel as a plain segmen between two n
 def Iteration_Process(panelMatrix, N): #proces to obtain the matrixes of the circulation equation
     a = np.zeros((len(panelMatrix),len(panelMatrix)))
     RHS = np.zeros((len(panelMatrix),1))
-    angle = [np.sin(par.alfa),np.cos(par.alfa)]
+    angle = [np.cos(par.alfa),np.sin(par.alfa)]
     #print(angle)
     #print(f"angle: ", angle)
     for i in range(0,len(panelMatrix)):
@@ -86,7 +86,7 @@ def Iteration_Process(panelMatrix, N): #proces to obtain the matrixes of the cir
             w = -(panelMatrix[i][3][0]-panelMatrix[j][2][0])/(2*np.pi*r2)
             velocity = np.array([u,w])
             a[i][j] = np.dot(velocity,panelMatrix[i][0])#*np.pi*(1/N) #fila i ,columna j. si aquest fragment es multiplica, es compleix l'exemple de la diapo 12
-        RHS[i] = -np.dot(angle,panelMatrix[i][0]) *np.sin(par.alfa)
+        RHS[i] = -np.dot(angle,panelMatrix[i][0])
         #print(f"normal: ", panelMatrix[i][0])
 
     return a,RHS #return matrix of parameters and result

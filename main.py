@@ -34,7 +34,7 @@ for i in range(start,finish+step,step):
 """
     Cl[cont]=(vi.Lift_Coeficient(Circulation))
     angle[cont] = i
-    #print(angle[cont],Cl[cont])
+    print(angle[cont],Cl[cont])
     cont += 1
 
 """print(coord)

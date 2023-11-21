@@ -4,11 +4,11 @@ import numpy as np
 f,p,alfa,xh,eta = 0.,0.,0.,0.,0.
 def Parameters_definition():
     global f,p,alfa,xh,eta
-    naca = (4,4,0,0) #input("Insert NACA series:")
+    naca = (0,0,0,0) #input("Insert NACA series:")
     f = int(naca[0])/100 #Maximum camber
     p = int(naca[1])/10 #position of maximum camber
     angle_ATACK = 0  #atack angle in degrees
-    angle_FLAP = 0 #flap angle in degrees
+    angle_FLAP = 3 #flap angle in degrees
     xh = 0.7 #Cordinate of the hinge in function of the chord
 
 
