@@ -98,3 +98,8 @@ def Lift_Coeficient (circulation): #Calculate the cl using the circulation matri
     for i in range(0,len(circulation)): #add all the Cl using the adimensional kutta condition.
         Cl += 2*circulation[i]
     return Cl
+def MomentLE_Coeficient (circulation,infopanel):
+    cmle = 0
+    for i in range (0,len(circulation)):
+        cmle += circulation[i]*(infopanel[i][3][0])
+    return -2*cmle*np.cos(par.alfa)

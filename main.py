@@ -18,6 +18,7 @@ step = 1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 angle = np.zeros((int(lenght),1))
 Cl = np.zeros((int(lenght),1))
+Cmle = np.zeros((int(lenght),1))
 
 for i in range(start,finish+step,step):
     par.alfa = i*(np.pi/180)
@@ -33,8 +34,9 @@ for i in range(start,finish+step,step):
     print(Circulation)
 """
     Cl[cont]=(vi.Lift_Coeficient(Circulation))
+    Cmle[cont] = (vi.MomentLE_Coeficient(Circulation,infoMatrix))
     angle[cont] = i
-    print(angle[cont],Cl[cont])
+    print(angle[cont],Cmle[cont])
     cont += 1
 
 """print(coord)
@@ -42,9 +44,12 @@ print(*zip(*coord))
 plt.scatter(*zip(*coord))
 plt.show()"""
 
-plt.plot(angle,Cl, color='black', linestyle='dashed', linewidth = 1,
-         marker='o', markerfacecolor='black', markersize=4)
-
+plt.plot(angle,Cmle, color='black', linestyle='dashed', linewidth = 1,
+         marker='o', markerfacecolor='black', markersize=4,label = 'cmle')
+plt.plot(angle,Cl, color='blue', linestyle='dashed', linewidth = 1,
+         marker='o', markerfacecolor='black', markersize=4,label = 'cl')
+plt.grid(color='black', linestyle='--', linewidth=0.5)
+plt.legend()
 plt.title('Cl vs atack angle')
 plt.xlabel('Atack angle (deg)')
 plt.ylabel('Cl')
