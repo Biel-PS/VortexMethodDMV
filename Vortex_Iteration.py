@@ -2,7 +2,7 @@ import numpy as np
 
 import Parameters as par
 
-def Calc_coord_UNIFORM (cordMatrix,p,N,xh): #Create the node points using a linal aprixmation
+def Calc_coord_UNIFORM (cordMatrix,p,N,xh,eta): #Create the node points using a linal aprixmation
     cont = 0
     step = 1/N
     for x in np.arange(0.0,1.000001,step):
@@ -14,10 +14,10 @@ def Calc_coord_UNIFORM (cordMatrix,p,N,xh): #Create the node points using a lina
             cordMatrix[cont,1] = (par.f/(1-par.p**2))*(1-2*par.p+2*par.p*x-x**2)
         cont +=1
     for i in range(0,len(cordMatrix)): #We rotate the points from the flap the deflection angle
-        if cordMatrix[i][0]>= xh and par.eta !=0:
+        if cordMatrix[i][0]>= xh and eta !=0:
             cordMatrix[i] = np.matmul([[np.cos(par.eta), np.sin(par.eta)], [-np.sin(par.eta), np.cos(par.eta)]],
                                       [cordMatrix[i][0] - xh, cordMatrix[i][1]]) + [xh, 0]
-def Calc_coord_Cosinus (cordMatrix,p,N,xh): #Create the node points using an angular cosinus aproximation
+def Calc_coord_Cosinus (cordMatrix,p,N,xh,eta): #Create the node points using an angular cosinus aproximation
     cont = 0
     Control = True
     while Control:
@@ -34,7 +34,7 @@ def Calc_coord_Cosinus (cordMatrix,p,N,xh): #Create the node points using an ang
             Control = False
         cont += 1
     for i in range(0,len(cordMatrix)):#We rotate the points from the flap the deflection angle
-        if cordMatrix[i][0] >= xh and par.eta !=0:
+        if cordMatrix[i][0] >= xh and eta !=0:
             cordMatrix[i] = np.matmul([[np.cos(par.eta),np.sin(par.eta)],[-np.sin(par.eta),np.cos(par.eta)]],[cordMatrix[i][0]-xh,cordMatrix[i][1]]) + [xh,0]
 
 def Calc_panel (cordMatrix,N): #Define the panel as a plain segmen between two nodes
