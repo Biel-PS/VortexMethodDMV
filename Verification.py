@@ -13,7 +13,6 @@ def main():
 
     # Almacenar resultados
     N_values = np.arange(start, finish + 1)
-    Cl_values = []
 
     # Calcular Cl para cada valor de N
     for N in N_values:
