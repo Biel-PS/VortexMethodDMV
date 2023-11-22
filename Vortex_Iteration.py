@@ -2,93 +2,99 @@ import numpy as np
 
 import Parameters as par
 
-def Calc_coord_UNIFORM (cordMatrix,f,N):
+def Calc_coord_UNIFORM (cordMatrix,p,N,xh): #Create the node points using a linal aprixmation
     cont = 0
     step = 1/N
     for x in np.arange(0.0,1.000001,step):
-        if x < f:
+        if x < p: #first half of the naca parabola
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/par.p**2)*(2*par.p*x-x**2)
-        elif x >= f:
+        elif x >= p: #second half of the naca parabola
             cordMatrix[cont,0] = x
-            cordMatrix[cont,1] = (par.f/(1-par.p**2))*((1-2*par.p)+2*par.p*x-x**2)
+            cordMatrix[cont,1] = (par.f/(1-par.p**2))*(1-2*par.p+2*par.p*x-x**2)
         cont +=1
-
-def Calc_coord_Cosinus (cordMatrix,f,N):
+    for i in range(0,len(cordMatrix)): #We rotate the points from the flap the deflection angle
+        if cordMatrix[i][0]>= xh and par.eta !=0:
+            cordMatrix[i] = np.matmul([[np.cos(par.eta), np.sin(par.eta)], [-np.sin(par.eta), np.cos(par.eta)]],
+                                      [cordMatrix[i][0] - xh, cordMatrix[i][1]]) + [xh, 0]
+def Calc_coord_Cosinus (cordMatrix,p,N,xh): #Create the node points using an angular cosinus aproximation
     cont = 0
     Control = True
     while Control:
         x = 0.5*(1-np.cos(np.pi*(cont)/(N)))
-        if x < f:
+        if x < p: #First parabola deffined by the naca 4 digit standard
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/par.p**2)*(2*par.p*x-x**2)
-        elif x >= f and x<0.99999999:
+        elif x >= p and x<0.99999999:#second parabola deffined by the naca 4 digit standard
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] = (par.f/(1-par.p**2))*((1-2*par.p)+2*par.p*x-x**2)
-        else:
+        else: #Last node is TE of the airfoil
             cordMatrix[cont, 0] = 1
             cordMatrix[cont, 1] = (par.f / (1 - par.p ** 2)) * ((1 - 2 * par.p) -1 + 2 * par.p )
             Control = False
         cont += 1
+    for i in range(0,len(cordMatrix)):#We rotate the points from the flap the deflection angle
+        if cordMatrix[i][0] >= xh and par.eta !=0:
+            cordMatrix[i] = np.matmul([[np.cos(par.eta),np.sin(par.eta)],[-np.sin(par.eta),np.cos(par.eta)]],[cordMatrix[i][0]-xh,cordMatrix[i][1]]) + [xh,0]
 
-def Calc_panel (cordMatrix,N):
-    cont_i = 0
+def Calc_panel (cordMatrix,N): #Define the panel as a plain segmen between two nodes
+    cont_i = 0 # we define the cache that will be used in the definition of the panels
     cont_k = 0
     cache_x = 0
     cache_z = 0
     property_panel = []
-    for i in cordMatrix:
-        if cont_k != 0:
+    for i in cordMatrix: #we define the geometry of each panel
+        if cont_k != 0: # we dont need to operate with the first point of the extradros
             for k in i:
-                if cont_i == 0:
+                if cont_i == 0: #for the x coordinate of a point
                     delta_x = cordMatrix[cont_k,cont_i] - cache_x
                     xo = cache_x
                     cache_x = cordMatrix[cont_k,cont_i]
                     cont_i = 1
-                else:
+                else: #for the z coordinate of a point
                     delta_z = cordMatrix[cont_k, cont_i] - cache_z
                     zo = cache_z
                     cache_z = cordMatrix[cont_k, cont_i]
                     cont_i = 0
 
-            panel_chord = np.sqrt(delta_z**2 + delta_x**2)
+            panel_chord = np.sqrt(delta_z**2 + delta_x**2) # We define the length of the panel i functon of the total airfoil chord
 
-            vec_normal = (-delta_z/panel_chord,delta_x/panel_chord)
+            vec_normal = (-delta_z/panel_chord,delta_x/panel_chord) #vector normal to the segment
 
-            vec_tangent = (delta_x/panel_chord,delta_z/panel_chord)
+            vec_tangent = (delta_x/panel_chord,delta_z/panel_chord)#vector tangent to the segment
 
-            pos_lumpedVortex = xo + (0.25*panel_chord)*np.transpose(vec_tangent)
-            pos_controlpoint = xo + (0.75 * panel_chord) * np.transpose(vec_tangent)
+            pos_lumpedVortex = [xo + (0.25*panel_chord)*vec_tangent[0],vec_tangent[1]+zo] #postion of the vortex in one segment (0,25 of the panel lenght)
+            pos_controlpoint = [xo + (0.75 * panel_chord)*vec_tangent[0],vec_tangent[1]+zo] #postion of the control point of the segment (0,75 of the panel lenght)
 
-            conjunto = np.array([np.transpose(vec_normal),np.transpose(vec_tangent),pos_lumpedVortex,pos_controlpoint])
-            property_panel.append(conjunto)
+            conjunto = np.array([np.transpose(vec_normal),np.transpose(vec_tangent),pos_lumpedVortex,pos_controlpoint]) #we set all the data to an array
+            property_panel.append(conjunto) #create a matrix with all the paramenters of every panel appending the created array
 
         cont_k += 1
-    return property_panel
+    return property_panel #retrun property matrix
 
-def Iteration_Process(panelMatrix, N):
-    a = np.zeros((len(panelMatrix),len(panelMatrix)))
+def Iteration_Process(panelMatrix, N): #proces to obtain the matrixes of the circulation equation
+    a = np.zeros((len(panelMatrix),len(panelMatrix))) #define all the matrixes that will be used
     RHS = np.zeros((len(panelMatrix),1))
-    angle = [np.cos(par.alfa),np.sin(par.alfa)]
-    print(angle)
-    #print(f"angle: ", angle)
-    for i in range(0,len(panelMatrix)):
+    angle = [np.cos(par.alfa),np.sin(par.alfa)] #define the atack angle vector
 
-        for j in range(0,len(panelMatrix)):
+    for i in range(0,len(panelMatrix)): #iterate all the control points
+
+        for j in range(0,len(panelMatrix)): #iterate all the vortices points
             r2 = (panelMatrix[i][3][0]-panelMatrix[j][2][0])**2+(panelMatrix[i][3][1]-panelMatrix[j][2][1])**2 #r^2 = (xi-xj)^2 +(zi-zj)^2
             u = (panelMatrix[i][3][1]-panelMatrix[j][2][1])/(2*np.pi*r2)
-            w = (panelMatrix[i][3][0]-panelMatrix[j][2][0])/(2*np.pi*r2)
-            velocity = np.array([u,w])
-            a[j][i] = np.dot(np.transpose(velocity),panelMatrix[i][0])
-        RHS[i] = np.dot(angle,panelMatrix[i][0])
+            w = -(panelMatrix[i][3][0]-panelMatrix[j][2][0])/(2*np.pi*r2)
+            velocity = np.array([u,w]) #define an array with the tangent and normal velocity
+            a[i][j] = np.dot(velocity,panelMatrix[i][0])#*np.pi*(1/N) #fila i ,columna j. si aquest fragment es multiplica, es compleix l'exemple de la diapo 12
+        RHS[i] = -np.dot(angle,panelMatrix[i][0])
         #print(f"normal: ", panelMatrix[i][0])
 
-    return a,RHS
-def Circuilation_Calc (a,RHS):
+    return a,RHS #return matrix of parameters and result
+def Circuilation_Calc (a,RHS): #obtain the circulation matrix solving the matricial equation
+
     return np.matmul(np.linalg.inv(a),RHS)
 
-def Lift_Coeficient (circulation):
+def Lift_Coeficient (circulation): #Calculate the cl using the circulation matrix
     Cl = 0
-    for i in range(0,len(circulation)):
+    for i in range(0,len(circulation)): #add all the Cl using the adimensional kutta condition.
         Cl += 2*circulation[i]
     return Cl
