@@ -103,3 +103,7 @@ def MomentLE_Coeficient (circulation,infopanel):
     for i in range (0,len(circulation)):
         cmle += circulation[i]*(infopanel[i][3][0])
     return -2*cmle*np.cos(par.alfa)
+
+def MomentXH_Coeficient_OnlyFlap(clflap,cmleFlap,cmle):
+    Cmxh = (cmle-cmleFlap)+clflap*0.25
+    return Cmxh

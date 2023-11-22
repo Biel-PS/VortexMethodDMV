@@ -29,15 +29,16 @@ angle = np.zeros((int(lenght),1))
 Cl = np.zeros((int(lenght),1))#Cl con flap
 Cl_flap = np.zeros((int(lenght),1))#Cl sin flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
-
+Cmxh = np.zeros((int(lenght),1))
+print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|', '|Cmxh|')
 for i in range(start,finish+step,step):
     par.alfa = i*(np.pi/180)
 
-    #calulo con el angulo de flap establecido en parameters.py
+    #calulo con el angulo de 0
     infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE,X LUMPED VORTEX, X CONTROL POINT
     coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,N)
     Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
-    #parametros calculados para un angulo de falp 0
+    #parametros calculados para un angulo de falp establecido en par.
     infoMatrix_flap =  vi.Calc_panel(coord_flap,N)#VECTOR NORMAL, VECTOR TANGENTE,X LUMPED VORTEX, X CONTROL POINT
     coefMatrix_flap, RHSmatrix_flap = vi.Iteration_Process(infoMatrix_flap, N)
     Circulation_flap = vi.Circuilation_Calc(coefMatrix_flap, RHSmatrix_flap)
@@ -47,12 +48,13 @@ for i in range(start,finish+step,step):
     print(RHSmatrix)
     print(Circulation)
 """
-    Cl[cont]=(vi.Lift_Coeficient(Circulation_flap))
+    Cl[cont]=(vi.Lift_Coeficient(Circulation_flap)) #Cl de el perfil completo
     Cl_flap[cont] = (vi.Lift_Coeficient(Circulation_flap - Circulation)) #delta de Cl a causa del flap
 
     Cmle[cont] = (vi.MomentLE_Coeficient(Circulation_flap,infoMatrix))
+    Cmxh[cont] = (vi.MomentXH_Coeficient_OnlyFlap(Cl_flap[cont],Cmle[cont],vi.MomentLE_Coeficient(Circulation,infoMatrix)))
     angle[cont] = i
-    print(angle[cont],Cl[cont],Cl_flap[cont])
+    print(angle[cont],Cl[cont],Cl_flap[cont],Cmxh[cont])
     cont += 1
 
 """print(coord)
