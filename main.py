@@ -30,7 +30,7 @@ Cl = np.zeros((int(lenght),1))#Cl con flap
 Cl_flap = np.zeros((int(lenght),1))#Cl sin flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
-print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|', '|Cmxh|')
+print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
 for i in range(start,finish+step,step):
     par.alfa = i*(np.pi/180)
 
@@ -54,7 +54,7 @@ for i in range(start,finish+step,step):
     Cmle[cont] = (vi.MomentLE_Coeficient(Circulation_flap,infoMatrix))
     Cmxh[cont] = (vi.MomentXH_Coeficient_OnlyFlap(Cl_flap[cont],Cmle[cont],vi.MomentLE_Coeficient(Circulation,infoMatrix)))
     angle[cont] = i
-    print(angle[cont],Cl[cont],Cl_flap[cont],Cmxh[cont])
+    print(angle[cont],Cl[cont],Cl_flap[cont],Cmle[cont],Cmxh[cont])
     cont += 1
 
 """print(coord)
