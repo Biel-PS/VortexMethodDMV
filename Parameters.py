@@ -8,7 +8,7 @@ def Parameters_definition():
     f = int(naca[0])/100 #Maximum camber
     p = int(naca[1])/10 #position of maximum camber
     angle_ATACK = 0  #atack angle in degrees
-    angle_FLAP = 5 #flap angle in degrees
+    angle_FLAP = 2 #flap angle in degrees
     xh = 0.7 #Cordinate of the hinge in function of the chord
 
 
@@ -18,4 +18,4 @@ def Parameters_definition():
      xh = int(input("Insert the hinge position in % of chord: "))#position of the hinge
     eta = int(input("Insert the flap's angle of defletion in degrees")) #flap deflection angle degree """""
 
-M = 10 #numer of panels (TO OPTIMIZE)
+M = 100 #numer of panels (TO OPTIMIZE)
