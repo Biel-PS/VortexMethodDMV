@@ -1,7 +1,7 @@
 #Project parameters
 
 import numpy as np
-f,p,alfa,xh,eta = 0.,0.,0.,0.,0.
+f,p,alfa,xh,eta = 0.02,0.4,4,0.7,0.
 def Parameters_definition():
     global f,p,alfa,xh,eta
     naca = (0,0,0,0) #input("Insert NACA series:")
