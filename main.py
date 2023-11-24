@@ -28,10 +28,10 @@ Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
 print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
 for i in range(start,finish+step,step):
-    par.eta = i*(np.pi/180)
+    par.eta = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
     vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
     #calulo con el angulo de 0
-    infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE,X LUMPED VORTEX, X CONTROL POINT
+    infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
     coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,N)
     Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
 
@@ -65,7 +65,7 @@ plt.title('Cl vs atack angle')
 plt.xlabel('Atack angle (deg)')
 plt.ylabel('Cl')
 plt.show()"""
-
+#CODI PER IMPRIMIR PER PANTALLA EL GRAFIC DE CMXH I CL 
 fig, ax1 = plt.subplots()
 
 color = 'tab:red'
