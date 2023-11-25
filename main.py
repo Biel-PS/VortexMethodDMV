@@ -88,4 +88,5 @@ plt.show()
 print(f"A: ", coefMatrix)
 print(f"Circulacion: ",Circulation)
 """
-#funcionaa
+#funcionaaaaaaaa
+#siria
