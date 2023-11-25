@@ -1,76 +1,53 @@
 import numpy as np
-import matplotlib.pyplot as plt
+from scipy import integrate
 import Parameters as par
 import Vortex_Iteration as vi
-from scipy import integrate
 
-th_p=np.arccos(1-2*par.p)
+th_p = np.arccos(1 - 2 * par.p)
 
+#Definimos las funciones que se integraran mas adelante
 def dz(th):
     if th < th_p:
-        z = (par.f/par.p**2)*(2*par.p-1+np.cos(th))
-    elif th_p<=th<=np.pi:
-        z = (par.f/(1-par.p**2))*(2*par.p-1+np.cos(th))
+        z = (par.f / par.p**2) * (2 * par.p - 1 + np.cos(th))
+    elif th_p <= th:
+        z = (par.f / (1 - par.p**2)) * (2 * par.p - 1 + np.cos(th))
     return z
 
+def int1(th):
+    return dz(th) * np.cos(th)
 
-# Definir la función que quieres integrar
-#def f(x):
-    #return dz/dx
+def int2(th):
+    return dz(th) * np.cos(2*th)
 
-# Calcular la integral definida de 0 a 2 de la función f(x)
-result0, error = integrate.quad(dz, 0, np.pi)
+def int3(th):
+    return dz(th) * (np.cos(th) - 1)
 
-#vull agafar els diferents valors de x,z del vi.Calc coord cosinus del biel per poder fer la integral.
+# Calcular la integral definida de 0 a pi de las diferentes funciones
+result0, error0 = integrate.quad(dz, 0, np.pi)
+result1, error1 = integrate.quad(int1, 0, np.pi)
+result2, error2 = integrate.quad(int2, 0, np.pi)
+result3, error3 = integrate.quad(int3, 0, np.pi)
 
+# Encontrar coef A0,1,2
+A0 = par.alfa * np.pi / 180 - (1 / np.pi) * result0
+A1 = 2 / np.pi * result1
+A2=2 / np.pi * result2
 
-#trobar coef A0,1,2
-A0=par.alfa-(1/np.pi)*result0
 print(A0)
+print(A1)
+print(A2)
 
-################################
-"""
-def g(x):
-    return (dz/dx)*np.cos(z)
+#Encontrar alfa_lo_tat, CL_tat, CM0_tat (sin flap)
+alfa_lo_tat=-1/np.pi*result3
+CL_tat=(2*A0+A1)*np.pi
+CM0_tat=(A2-A1)*np.pi/4
 
-# Calcular la integral definida de 0 a 2 de la función f(x)
-#result1, error = integrate.quad(g, 0, np.pi)
+#Con flap
+if par.eta>0:
+    th_h=np.arccos(1-2*par.xh)
+    alfa_lo_tat=alfa_lo_tat-(par.eta/np.pi)*(np.pi-th_h+np.sin(th_h))
+    CL_tat=CL_tat+2*(np.pi-th_h+np.sin(th_h))*par.eta
+    CM0_tat=CM0_tat-np.sin(th_h)*(1-cos(th_h))*par.eta/2
 
-#A1=2/np.pi*result1
+CM_tat=CM0_tat-CL_tat/4
 
-################################
-
-def h(x):
-    return (dz/dx)*np.cos(2*z)
-
-# Calcular la integral definida de 0 a 2 de la función f(x)
-#result3, error = integrate.quad(h, 0, np.pi)
-
-#A2=2/np.pi*result3
-
-################################
-def j(x):
-    return (dz/dx)*(np.cos(z)-1)
-
-# Calcular la integral definida de 0 a 2 de la función f(x)
-#result4, error = integrate.quad(g, 0, np.pi)
-
-#alfa_lo_tat=-1/np.pi*result4
-
-################################
-
-#CL_tat=(2*A0+A1)*np.pi
-#CM0_tat=(A2-A1)*np.pi/4
-
-#Amb flap
-
-#if par.eta>0:
-    #th_h=np.arccos(1-2*par.xh)
-    #alfa_lo_tat=alfa_lo_tat-(par.eta/np.pi)*(np.pi-th_h+np.sin(th_h))
-    #CL_tat=CL_tat+2*(np.pi-th_h+np.sin(th_h))*par.eta
-    #CM0_tat=CM0_tat-np.sin(th_h)*(1-cos(th_h))*par.eta/2
-
-#CM_tat=CM0_tat-CL_tat/4
-
-
-"""
