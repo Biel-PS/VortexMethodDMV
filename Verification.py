@@ -55,22 +55,28 @@ if par.eta>0:
 
 CM_tat=CM0_tat-CL_tat/4
 
+print(CL_tat)
+print(CM_tat)
+
+
 ####################
 
 #Ara trobem valors de Cl i CM0 mitjançant DVM per N panells (entre 1 i 400)
-
+"""
 def DVM(i):
     # Replace this with your DVM implementation
     CL = 0.7
     CM = 0.3
     return CL, CM
+"""
 
 M = 400  # Maximum number of panels
 data = np.zeros((3, M))
 
 for i in range(1, M + 1):
     start_time = time.time()
-    CL, CM = DVM(i)
+    CL = vi.Lift_Coeficient(circulation, infopanel)
+    CM = vi.MomentLE_Coeficient(circulation,infopanel)
     data[0, i - 1] = CL
     data[1, i - 1] = CM
     data[2, i - 1] = time.time() - start_time

@@ -110,3 +110,4 @@ def MomentLE_Coeficient (circulation,infopanel):
         if infopanel[i][2][0]>=par.xh:
             cmxh+= circulation[i]*(infopanel[i][3][0]-par.xh)
     return -2*cmle*np.cos(par.alfa) , -2*cmxh*np.cos(par.alfa)
+
