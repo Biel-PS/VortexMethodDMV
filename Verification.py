@@ -61,16 +61,102 @@ print(CM_tat)
 ####################
 
 #Ara trobem valors de Cl i CM0 mitjançant DVM per N panells (entre 1 i 400)
+
+
+
+par.Parameters_definition()
+
+cont = 0
+
+start =1
+finish = 400
+step = 1
+lenght = np.abs(start/step)+np.abs(finish/step) + 1
+
+
+N = np.zeros((int(lenght),1))
+
+Cl_flap = np.zeros((int(lenght),1))#Cl del flap
+
+Cmxh = np.zeros((int(lenght),1))
+print('|Panels number|','|Cl perfil|','|Cmle|')
+
+data = np.zeros((3, 400))
+
+for i in range(start,finish+step,step):
+    start_time = time.time()
+    coord = np.zeros((i + 1, 2))  # files columnes; x y
+    par.alfa = 4*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
+    vi.Calc_coord_Cosinus(coord, par.p, i, par.xh, par.eta)
+    #calulo con el angulo de 0
+    infoMatrix = vi.Calc_panel(coord,i)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
+    coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,i)
+    Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
+
+    """print(infoMatrix)
+    print(coefMatrix)
+    print(RHSmatrix)
+    print(Circulation)
+"""
+
+    data[0, i - 1] = time.time() - start_time
+
+
+    data[1, i-1], Cl_flap[cont] =(vi.Lift_Coeficient(Circulation,infoMatrix)) #Cl de el perfil completo i flap
+
+
+    data[2, i - 1], Cmxh[cont] = (vi.MomentLE_Coeficient(Circulation,infoMatrix))
+
+    N[cont] = i
+    print(N[cont],data[1, i-1],data[2, i-1])
+    cont += 1
+
+error = np.zeros((2, 400))
+error[0, :] = np.abs((data[1, i-1] - CL_tat) / CL_tat) * 100
+error[1, :] = np.abs((data[2, i-1] - CM_tat) / CM_tat) * 100
+
+
+# Plots: elapsed time, CL, CM
+plt.figure(figsize=(10, 6))
+
+# Elapsed time plot
+plt.subplot(3, 1, 1)
+plt.plot(data[0, :], label='Elapsed Time')
+plt.xlabel('Panel Number')
+plt.ylabel('Elapsed Time (s)')
+plt.legend()
+
+# CL convergence plot
+plt.subplot(3, 1, 2)
+plt.plot(data[1, :], label='CL')
+plt.xlabel('Panel Number')
+plt.ylabel('CL')
+plt.legend()
+
+# CM convergence plot
+plt.subplot(3, 1, 3)
+plt.plot(data[2, :], label='CM')
+plt.xlabel('Panel Number')
+plt.ylabel('CM')
+plt.legend()
+
+plt.tight_layout()
+plt.show()
+
+
+
+
 """
 def DVM(i):
     # Replace this with your DVM implementation
     CL = 0.7
     CM = 0.3
     return CL, CM
-"""
+
 
 M = 400  # Maximum number of panels
 data = np.zeros((3, M))
+
 
 for i in range(1, M + 1):
     start_time = time.time()
@@ -110,3 +196,4 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+"""
