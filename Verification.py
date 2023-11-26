@@ -5,6 +5,7 @@ from scipy import integrate
 import Parameters as par
 import Vortex_Iteration as vi
 
+par.Parameters_definition()
 
 th_p = np.arccos(1 - 2 * par.p)
 
@@ -32,13 +33,13 @@ result2, error2 = integrate.quad(int2, 0, np.pi)
 result3, error3 = integrate.quad(int3, 0, np.pi)
 
 # Encontrar coef A0,1,2
-A0 = par.alfa * np.pi / 180 - (1 / np.pi) * result0
-A1 = 2 / np.pi * result1
-A2=2 / np.pi * result2
+A0 = par.alfa - (1 / np.pi) * result0
+A1 = (2 / np.pi) * result1
+A2= (2 / np.pi) * result2
 
-print(A0)
-print(A1)
-print(A2)
+print(f"A0: ",A0)
+print(f"A1: ",A1)
+print(f"A2: ",A2)
 
 #Encontrar alfa_lo_tat, CL_tat, CM0_tat (sin flap)
 alfa_lo_tat=-1/np.pi*result3
@@ -50,7 +51,7 @@ if par.eta>0:
     th_h=np.arccos(1-2*par.xh)
     alfa_lo_tat=alfa_lo_tat-(par.eta/np.pi)*(np.pi-th_h+np.sin(th_h))
     CL_tat=CL_tat+2*(np.pi-th_h+np.sin(th_h))*par.eta
-    CM0_tat=CM0_tat-np.sin(th_h)*(1-cos(th_h))*par.eta/2
+    CM0_tat=CM0_tat-np.sin(th_h)*(1-np.cos(th_h))*par.eta/2
 
 CM_tat=CM0_tat-CL_tat/4
 

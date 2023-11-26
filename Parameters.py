@@ -7,8 +7,8 @@ def Parameters_definition():
     naca = (0,0,0,0) #input("Insert NACA series:")
     f = int(naca[0])/100 #Maximum camber
     p = int(naca[1])/10 #position of maximum camber
-    angle_ATACK = 0  #atack angle in degrees
-    angle_FLAP = 60 #flap angle in degrees
+    angle_ATACK = 4  #atack angle in degrees
+    angle_FLAP = 0 #flap angle in degrees
     xh = 0.8 #Cordinate of the hinge in function of the chord
 
 
