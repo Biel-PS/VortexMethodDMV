@@ -27,10 +27,10 @@ def Calc_coord_Cosinus (cordMatrix,p,N,xh,eta): #Create the node points using an
             cordMatrix[cont,1] = (par.f/par.p**2)*(2*par.p*x-x**2)
         elif x >= p and x<0.99999999:#second parabola deffined by the naca 4 digit standard
             cordMatrix[cont,0] = x
-            cordMatrix[cont,1] = (par.f/(1-par.p**2))*((1-2*par.p)+2*par.p*x-x**2)
+            cordMatrix[cont,1] = (par.f/(1-par.p)**2)*((1-2*par.p)+2*par.p*x-x**2)
         else: #Last node is TE of the airfoil
             cordMatrix[cont, 0] = 1
-            cordMatrix[cont, 1] = (par.f / (1 - par.p ** 2)) * ((1 - 2 * par.p) -1 + 2 * par.p )
+            cordMatrix[cont, 1] = (par.f / (1 - par.p)**2) * ((1 - 2 * par.p) -1 + 2 * par.p )
             Control = False
         cont += 1
     for i in range(0,len(cordMatrix)):#We rotate the points from the flap the deflection angle

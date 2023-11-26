@@ -6,7 +6,6 @@ import Parameters as par
 import Vortex_Iteration as vi
 
 
-
 th_p = np.arccos(1 - 2 * par.p)
 
 #Definimos las funciones que se integraran mas adelante
@@ -75,8 +74,8 @@ data = np.zeros((3, M))
 
 for i in range(1, M + 1):
     start_time = time.time()
-    CL = vi.Lift_Coeficient(circulation, infopanel)
-    CM = vi.MomentLE_Coeficient(circulation,infopanel)
+    CL = vi.Lift_Coeficient(circulation, infopanel)[0]
+    CM = vi.MomentLE_Coeficient(circulation, infopanel)[0]
     data[0, i - 1] = CL
     data[1, i - 1] = CM
     data[2, i - 1] = time.time() - start_time
