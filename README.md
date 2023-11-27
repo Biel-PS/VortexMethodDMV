@@ -1,6 +1,6 @@
 # VortexMethodDMV
 
-This code was made by students from Universitat Politècnica de Catalunya, Pau Ondoño, Pol Miguel, Pau Andrés and Biel Pujadas.
+This code was made by students from Universitat Politècnica de Catalunya, Pau Ondoño, Miquel Tomàs, Pol Miguel, Pau Andrés and Biel Pujadas.
 The main objective of the project is to be able to use the TAT theory and the vortex circultaion method (DMV) to calcule the parameters 
 of a 4-digit NACA airfoil with and without flap.
 
