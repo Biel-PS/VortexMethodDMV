@@ -82,6 +82,7 @@ Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 Cmxh = np.zeros((int(lenght),1))
 print('|Panels number|','|Cl perfil|','|Cmle|')
 
+
 data = np.zeros((3, 400))
 
 for i in range(start,finish+step,step):
