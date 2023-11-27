@@ -3,10 +3,12 @@ import Vortex_Iteration as vi
 import matplotlib.pyplot as plt
 import numpy as np
 
-N = par.M; #Nombre de punts
+N = par.M #Nombre de punts
+coord = np.zeros((N+1,2)) #files columnes; x y
+par.Parameters_definition() #definim els parametres
 
-#Loads calculation
-CL = 0.0;
-CMLE = 0.0;
-
-for i in range (1,par.M,1):
+cont = 0
+eta_inicial = -10
+eta_final = 20
+step = 0.1
+lenght = np.abs(eta_inicial/step) + np.abs(eta_final/step)
