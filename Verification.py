@@ -26,7 +26,7 @@ def int2(th):
 def int3(th):
     return dz(th) * (np.cos(th) - 1)
 
-# Calcular la integral definida de 0 a pi de las diferentes funciones
+# Calcular la integral definida de 0 a pi de las diferentes funcionesCULO
 result0, error0 = integrate.quad(dz, 0, np.pi)
 result1, error1 = integrate.quad(int1, 0, np.pi)
 result2, error2 = integrate.quad(int2, 0, np.pi)
@@ -81,6 +81,7 @@ Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 
 Cmxh = np.zeros((int(lenght),1))
 print('|Panels number|','|Cl perfil|','|Cmle|')
+
 
 data = np.zeros((3, 400))
 
