@@ -26,7 +26,7 @@ def int2(th):
 def int3(th):
     return dz(th) * (np.cos(th) - 1)
 
-# Calcular la integral definida de 0 a pi de las diferentes funcionesCULO
+# Calcular la integral definida de 0 a pi de las diferentes funcionesCUL
 result0, error0 = integrate.quad(dz, 0, np.pi)
 result1, error1 = integrate.quad(int1, 0, np.pi)
 result2, error2 = integrate.quad(int2, 0, np.pi)
