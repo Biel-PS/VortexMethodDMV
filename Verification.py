@@ -70,7 +70,7 @@ par.Parameters_definition()
 cont = 0
 
 start =1
-finish = 400
+finish = 200
 step = 1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
@@ -83,7 +83,7 @@ Cmxh = np.zeros((int(lenght),1))
 print('|Panels number|','|Cl perfil|','|Cmle|')
 
 
-data = np.zeros((3, 400))
+data = np.zeros((3, finish))
 
 for i in range(start,finish+step,step):
     start_time = time.time()
