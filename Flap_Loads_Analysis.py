@@ -12,3 +12,5 @@ eta_inicial = -10
 eta_final = 20
 step = 0.1
 lenght = np.abs(eta_inicial/step) + np.abs(eta_final/step)
+
+
