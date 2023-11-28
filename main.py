@@ -15,7 +15,7 @@ par.Parameters_definition()
 #print(coord)
 cont = 0
 
-start =-20
+start =0
 finish = 20
 step = 1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
@@ -28,7 +28,7 @@ Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
 print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
 for i in range(start,finish+step,step):
-    par.alfa = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
+    par.eta = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
     vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
     #calulo con el angulo de 0
     infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
@@ -88,5 +88,4 @@ plt.show()
 print(f"A: ", coefMatrix)
 print(f"Circulacion: ",Circulation)
 """
-
-
+#funcionaa
