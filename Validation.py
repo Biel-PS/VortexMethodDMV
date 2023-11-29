@@ -3,6 +3,7 @@ import Vortex_Iteration as vi
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 N = par.M #Nombre de punts
 
 coord = np.zeros((N+1,2)) #files columnes; x y
@@ -14,20 +15,21 @@ par.Parameters_definition()
 #print(coord)
 cont = 0
 
-start =0
-finish = 20
+start =-10
+finish = 10
 step = 1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
 
-angle = np.zeros((int(lenght),1))
+angle  = np.zeros((int(lenght),1))
+print (angle)
 Cl = np.zeros((int(lenght),1))#Cl con flap del ala
 Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
 print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
 for i in range(start,finish+step,step):
-    par.eta = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
+    par.alfa = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
     vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
     #calulo con el angulo de 0
     infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
@@ -43,6 +45,16 @@ for i in range(start,finish+step,step):
     angle[cont] = i
     print(angle[cont],Cl[cont],Cl_flap[cont],Cmle[cont],Cmxh[cont])
     cont += 1
+
+print(np.transpose(angle))
+angle_array = np.array(angle).flatten()
+cl_array = np.array(Cl).flatten()
+
+
+Cl_slope = np.polyfit(angle_array, cl_array, 1)
+
+print(Cl_slope)
+
 
 
 plt.plot(angle,Cl, color='black', linestyle='dashed', linewidth = 1,
