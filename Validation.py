@@ -3,6 +3,14 @@ import Vortex_Iteration as vi
 import matplotlib.pyplot as plt
 import numpy as np
 
+def MomentAC_Coeficient (circulation,infopanel):
+    cmac = 0
+    cmxh = 0
+    for i in range (0,len(circulation)):
+        cmac += circulation[i]*(infopanel[i][3][0]-0.25)
+        if infopanel[i][2][0]>=par.xh:
+            cmxh+= circulation[i]*(infopanel[i][3][0]-par.xh)
+    return -2*cmac*np.cos(par.alfa) , -2*cmxh*np.cos(par.alfa)
 
 N = par.M #Nombre de punts
 
@@ -15,18 +23,19 @@ par.Parameters_definition()
 #print(coord)
 cont = 0
 
-start =0
+start =-5
 finish = 10
-step = 0.1
+step = 0.5
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
-"-1.0356136819705584"
-"-1.036226571769841"
+
 angle  = np.zeros((int(lenght),1))
 Cl = np.zeros((int(lenght),1))#Cl con flap del ala
 Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
+Cmac = np.zeros((int(lenght),1)) #coef cm0
+
 print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
 for i in np.arange(start,finish+step,step):
     par.alfa = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
@@ -41,6 +50,7 @@ for i in np.arange(start,finish+step,step):
 
 
     Cmle[cont],Cmxh[cont] = (vi.MomentLE_Coeficient(Circulation,infoMatrix))
+    Cmac[cont], Cmxh[cont] = (MomentAC_Coeficient(Circulation, infoMatrix))
 
     angle[cont] = i
     print(angle[cont],Cl[cont],Cl_flap[cont],Cmle[cont],Cmxh[cont])
@@ -49,18 +59,23 @@ for i in np.arange(start,finish+step,step):
 
 angle_array = np.array(angle).flatten()
 cl_array = np.array(Cl).flatten()
+cmac_array = np.array(Cmac).flatten()
 
 "Cl slope"
 Cl_slope = np.polyfit(angle_array, cl_array, 1)
+Cmac_slope = np.polyfit(cl_array,cmac_array,1)
 
-print(Cl_slope)
+print("Cl slope:",Cl_slope[0])
+print(Cmac_slope)
+print("Cmo:",Cmac_slope[0]*cl_array[int((start+finish)/2)]+Cmac_slope[1])
+"Cmac = Cmac_slope[0]*Cl + Cmac_slope[1]"
 
 "Alpha_0"
 alfa_0= -Cl_slope[1]/Cl_slope[0]
-print(alfa_0)
-" Cl = m alfa + n"
+print("alfa zero:",alfa_0)
 
-""""
+
+
 
 plt.plot(angle,Cl, color='black', linestyle='dashed', linewidth = 1,
          marker='o', markerfacecolor='black', markersize=4,label = 'cl')
@@ -73,8 +88,22 @@ plt.title('Cl vs atack angle')
 plt.xlabel('Atack angle (deg)')
 plt.ylabel('Cl')
 plt.show()
+
+plt.plot(Cl,Cmac, color='black', linestyle='dashed', linewidth = 1,
+         marker='o', markerfacecolor='black', markersize=4,label = 'cm0')
+plt.grid(color='black', linestyle='--', linewidth=0.5)
+
+plt.ylim(-1.25, 1.25)
+plt.legend()
+plt.title('Cm0 vs Cl')
+plt.xlabel('Cl')
+plt.ylabel('Cm0')
+plt.show()
+
+
 #CODI PER IMPRIMIR PER PANTALLA EL GRAFIC DE CMXH I CL
 
+"""
 fig, ax1 = plt.subplots()
 
 color = 'tab:red'

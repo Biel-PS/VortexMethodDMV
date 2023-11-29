@@ -4,7 +4,7 @@ import numpy as np
 f,p,alfa,xh,eta = 0.02,0.4,4,0.,0.
 def Parameters_definition():
     global f,p,alfa,xh,eta
-    naca = (4,4,1,2) #input("Insert NACA series:")
+    naca = (0,0,0,0) #input("Insert NACA series:")
     f = int(naca[0])/100 #Maximum camber
     p = int(naca[1])/10 #position of maximum camber
     angle_ATACK = 0  #atack angle in degrees
@@ -18,4 +18,4 @@ def Parameters_definition():
      xh = int(input("Insert the hinge position in % of chord: "))#position of the hinge
     eta = int(input("Insert the flap's angle of defletion in degrees")) #flap deflection angle degree """""
 
-M = 100 #numer of panels (TO OPTIMIZE)
+M = 150 #numer of panels (TO OPTIMIZE)
