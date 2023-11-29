@@ -15,20 +15,20 @@ par.Parameters_definition()
 #print(coord)
 cont = 0
 
-start =-10
+start =0
 finish = 10
-step = 1
+step = 0.1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
-
+"-1.0356136819705584"
+"-1.036226571769841"
 angle  = np.zeros((int(lenght),1))
-print (angle)
 Cl = np.zeros((int(lenght),1))#Cl con flap del ala
 Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
 print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
-for i in range(start,finish+step,step):
+for i in np.arange(start,finish+step,step):
     par.alfa = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
     vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
     #calulo con el angulo de 0
@@ -50,12 +50,17 @@ for i in range(start,finish+step,step):
 angle_array = np.array(angle).flatten()
 cl_array = np.array(Cl).flatten()
 
-
+"Cl slope"
 Cl_slope = np.polyfit(angle_array, cl_array, 1)
 
 print(Cl_slope)
 
+"Alpha_0"
+alfa_0= -Cl_slope[1]/Cl_slope[0]
+print(alfa_0)
+" Cl = m alfa + n"
 
+""""
 
 plt.plot(angle,Cl, color='black', linestyle='dashed', linewidth = 1,
          marker='o', markerfacecolor='black', markersize=4,label = 'cl')
@@ -69,6 +74,7 @@ plt.xlabel('Atack angle (deg)')
 plt.ylabel('Cl')
 plt.show()
 #CODI PER IMPRIMIR PER PANTALLA EL GRAFIC DE CMXH I CL
+
 fig, ax1 = plt.subplots()
 
 color = 'tab:red'
@@ -88,3 +94,4 @@ fig.tight_layout()  # otherwise the right y-label is slightly clipped
 plt.show()
 
 
+"""
