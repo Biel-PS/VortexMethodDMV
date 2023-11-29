@@ -46,7 +46,7 @@ for i in range(start,finish+step,step):
     print(angle[cont],Cl[cont],Cl_flap[cont],Cmle[cont],Cmxh[cont])
     cont += 1
 
-print(np.transpose(angle))
+
 angle_array = np.array(angle).flatten()
 cl_array = np.array(Cl).flatten()
 
