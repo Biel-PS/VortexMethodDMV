@@ -263,15 +263,7 @@ plt.xlim(0.1, 0.6)
 plt.show()
 ######################################MIQUEL#######################################
 ######################################################################
-p_range = np.linspace(0.1,0.9,10)
-M = 10
-th_pp = []
-"""for i in range(1, M + 1):
-    print(i)
-    th_pp[i-1] = np.arccos(1 - 2 * p_range[i-1])
-    print(th_pp[i-1])
-print(th_pp)
-"""
+
 valvec = np.zeros(10)
 mi_vector = np.zeros(10)
 alfa_vector = np.zeros((4, 10))
@@ -295,25 +287,61 @@ for j in range(4):
     alfa_vector[j] = mi_vector
 print("alfa", alfa_vector)
 
-"""
-plt.figure(figsize=(10, 6))
-plt.plot(mi_vector, label='p')
-plt.xlabel('P')
-plt.ylabel('alfa')
-"""
+
 
 aaa = 0
 for fila in alfa_vector:
     aaa = aaa + 1
     plt.plot(valvec, fila, linestyle='-', label=f'f = {0.02*(aaa-1)}')
-#plt.plot(valvec, alfa_vector, marker='o', linestyle='-', color='b', label='Mi Vector')
-
-
 plt.xlabel('p')
 plt.ylabel('alfa_lo')
 plt.title('Angle zero lift en funció de p i f')
-plt.legend()  
+plt.legend()
 plt.grid(True)
 plt.xlim(0.1, 0.6)
+plt.show()
 
+#cmo
+valvec = np.zeros(10)
+vector_var = np.zeros(10)
+cmo_vector = np.zeros((4, 10))
+for j in range(4):
+    f_bucle = j * 0.02
+    print(f_bucle)
+    for i in range(10):
+        valor = 0.1 + i * 0.0588888
+        th_pp = np.arccos(1 - 2 * valor)
+        print(i)
+        def dz(th):
+            if th < th_pp:
+                z = (f_bucle / valor ** 2) * (2 * valor - 1 + np.cos(th))
+            elif th_pp <= th:
+                z = (f_bucle / (1 - valor) ** 2) * (2 * valor - 1 + np.cos(th))
+            return z
+
+
+        result1, error1 = integrate.quad(int1, 0, np.pi)
+        result2, error2 = integrate.quad(int2, 0, np.pi)
+        A1 = (2 / np.pi) * result1
+        A2 = (2 / np.pi) * result2
+        CM0_tat = (A2 - A1) * np.pi / 4
+        vector_var[i] = CM0_tat
+        valvec[i] = valor
+    cmo_vector[j] = vector_var
+
+#plot cmo
+aaa = 0
+for fila in cmo_vector:
+    aaa = aaa + 1
+    plt.plot(valvec, fila, linestyle='-', label=f'f = {0.02*(aaa-1)}')
+#plt.plot(valvec, alfa_vector, marker='o', linestyle='-', color='b', label='Mi Vector')
+
+# Añadir etiquetas a los ejes y al gráfico
+plt.xlabel('p')
+plt.ylabel('Cmo')
+plt.title('Cmo en funció de p i f')
+plt.legend()  # Mostrar la leyenda si se especifican etiquetas en la función plot
+plt.grid(True)
+plt.xlim(0.1, 0.6)
+# Mostrar el gráfico
 plt.show()
