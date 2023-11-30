@@ -302,25 +302,18 @@ plt.xlabel('P')
 plt.ylabel('alfa')
 """
 
-
-
-
-# Supongamos que tienes un vector de valores
-
-
-# Crear el gráfico de líneas
 aaa = 0
 for fila in alfa_vector:
     aaa = aaa + 1
     plt.plot(valvec, fila, linestyle='-', label=f'f = {0.02*(aaa-1)}')
 #plt.plot(valvec, alfa_vector, marker='o', linestyle='-', color='b', label='Mi Vector')
 
-# Añadir etiquetas a los ejes y al gráfico
+
 plt.xlabel('p')
 plt.ylabel('alfa_lo')
 plt.title('Angle zero lift en funció de p i f')
-plt.legend()  # Mostrar la leyenda si se especifican etiquetas en la función plot
+plt.legend()  
 plt.grid(True)
 plt.xlim(0.1, 0.6)
-# Mostrar el gráfico
+
 plt.show()
