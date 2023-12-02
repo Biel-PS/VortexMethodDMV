@@ -11,7 +11,7 @@ def Calc_coord_UNIFORM (cordMatrix,p,N,xh,eta): #Create the node points using a 
             cordMatrix[cont,1] = (par.f/par.p**2)*(2*par.p*x-x**2)
         elif x >= p: #second half of the naca parabola
             cordMatrix[cont,0] = x
-            cordMatrix[cont,1] = (par.f/(1-par.p**2))*(1-2*par.p+2*par.p*x-x**2)
+            cordMatrix[cont,1] = (par.f/(1-par.p)**2)*(1-2*par.p+2*par.p*x-x**2)
         cont +=1
     for i in range(0,len(cordMatrix)): #We rotate the points from the flap the deflection angle
         if cordMatrix[i][0]>= xh and eta !=0:
