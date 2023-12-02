@@ -29,7 +29,7 @@ step = 0.5
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
 
-angle  = np.zeros((int(lenght),1))
+angle = np.zeros((int(lenght),1))
 Cl = np.zeros((int(lenght),1))#Cl con flap del ala
 Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
@@ -124,3 +124,79 @@ plt.show()
 
 
 """
+
+cont = 0
+cont_xh = 0
+
+par.xh=1
+start_xh =1
+finish_xh = 0.5
+step_xh = -0.05
+lenght_xh = np.abs(start_xh/step_xh)-np.abs(finish_xh/step_xh)+1
+
+xh = np.zeros((int(lenght_xh),1))
+angle = np.zeros((int(lenght),1))
+Cl = np.zeros((int(lenght),1))#Cl con flap del ala
+Cl_flap = np.zeros((int(lenght),1))#Cl del flap
+Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
+Cmxh = np.zeros((int(lenght),1))
+Cmac = np.zeros((int(lenght),1)) #coef cm0
+alfa_0 = np.zeros((int(lenght_xh),1))
+increment_alfa_0 = np.zeros((int(lenght_xh),1))
+
+
+print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
+for k in np.arange(start_xh,finish_xh+step_xh,step_xh):
+    print("Xh", cont_xh, ": -------------------------")
+    for i in np.arange(start,finish+step,step):
+        par.alfa = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
+        vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
+        #calulo con el angulo de 0
+        infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
+        coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,N)
+        Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
+
+
+        Cl[cont],Cl_flap[cont] =(vi.Lift_Coeficient(Circulation,infoMatrix)) #Cl de el perfil completo i flap
+
+
+        Cmle[cont],Cmxh[cont]= (vi.MomentLE_Coeficient(Circulation,infoMatrix))
+        Cmac[cont], Cmxh[cont] = (MomentAC_Coeficient(Circulation, infoMatrix))
+
+        angle[cont] = i
+        print(angle[cont],Cl[cont],Cl_flap[cont],Cmle[cont],Cmxh[cont])
+        cont += 1
+
+    angle_array = np.array(angle).flatten()
+    cl_array = np.array(Cl).flatten()
+
+    "Cl slope"
+    Cl_slope = np.polyfit(angle_array, cl_array, 1)
+
+    print("Cl slope:", Cl_slope[0])
+
+    "Alpha_0"
+    alfa_0[cont_xh] = -Cl_slope[1] / Cl_slope[0]
+    print("alfa zero:", alfa_0)
+
+    increment_alfa_0[cont_xh]=abs(alfa_0[cont_xh]-alfa_0[0])
+
+    cont = 0
+    angle = np.zeros((int(lenght),1))
+    par.xh += step_xh
+    xh[cont_xh] = 1-k
+    cont_xh += 1
+
+print(alfa_0)
+print(xh)
+print(increment_alfa_0)
+
+plt.plot(xh,increment_alfa_0, color='black', linestyle='dashed', linewidth = 1,
+         marker='o', markerfacecolor='black', markersize=4,label = 'increment alfa 0')
+plt.grid(color='black', linestyle='--', linewidth=0.5)
+
+plt.legend()
+plt.title('Cl vs atack angle')
+plt.xlabel('Atack angle (deg)')
+plt.ylabel('Cl')
+plt.show()
