@@ -192,11 +192,11 @@ print(xh)
 print(increment_alfa_0)
 
 plt.plot(xh,increment_alfa_0, color='black', linestyle='dashed', linewidth = 1,
-         marker='o', markerfacecolor='black', markersize=4,label = 'increment alfa 0')
+         marker='o', markerfacecolor='black', markersize=4,label = 'increment alpha 0')
 plt.grid(color='black', linestyle='--', linewidth=0.5)
 
 plt.legend()
-plt.title('Cl vs atack angle')
-plt.xlabel('Atack angle (deg)')
-plt.ylabel('Cl')
+plt.title('Delta Alpha_0 - flap position')
+plt.xlabel('Flap position')
+plt.ylabel('Delta alpha_0')
 plt.show()
