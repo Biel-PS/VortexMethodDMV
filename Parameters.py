@@ -9,7 +9,7 @@ def Parameters_definition():
     p = int(naca[1])/10 #position of maximum camber
     angle_ATACK = 0  #atack angle in degrees
     angle_FLAP = 1 #flap angle in degrees
-    xh = 1 #Cordinate of the hinge in function of the chord
+    xh = 0.7 #Cordinate of the hinge in function of the chord
 
 
     eta = angle_FLAP * (np.pi/180)
