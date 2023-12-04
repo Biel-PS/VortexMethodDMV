@@ -9,7 +9,7 @@ coord = np.zeros((N+1, 2))  # filas, columnas; x y
 
 
 # Lista de valores de x_h para iterar
-x_h_values = [0.7, 0.75, 0.8, 0.85]  # Puedes ajustar esta lista según tus necesidades
+x_h_values = [0.7, 0.75, 0.8, 0.85]
 print('|Angle [deg]|', '|Cl perfil|', '|Delta Cl flap|', '|Cmle|', '|Cmxh|', '|xh|')
 for x_h in x_h_values: #recorre los diferentes valores de xh
     #par.xh = x_h_values[pos]
