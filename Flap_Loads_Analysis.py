@@ -12,11 +12,10 @@ coord = np.zeros((N+1, 2))  # filas, columnas; x y
 x_h_values = [0.7, 0.75, 0.8, 0.85]
 print('|Angle [deg]|', '|Cl perfil|', '|Delta Cl flap|', '|Cmle|', '|Cmxh|', '|xh|')
 for x_h in x_h_values: #recorre los diferentes valores de xh
-    #par.xh = x_h_values[pos]
-    #par.alfa = 0.0014682949688161284
+    alfa = 0.0014682949688161284
     cont = 0
     eta_inicial = 0
-    eta_final = 10
+    eta_final = 20
     step = 1
     lenght = np.abs(eta_inicial/step) + np.abs(eta_final/step) + 1
     angle = np.zeros((int(lenght), 1))
@@ -28,7 +27,7 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
     for i in range(eta_inicial, eta_final + step, step):
         par.Parameters_definition()  # definimos los parámetros
         par.eta = i * (np.pi / 180)  # convertimos el ángulo a radianes
-        vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
+        vi.Calc_coord_Cosinus(coord, par.p, N, x_h, i)
         # calculamos con el ángulo de 0
         infoMatrix = vi.Calc_panel(coord, N)  # VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
         coefMatrix, RHSmatrix = vi.Iteration_Process(infoMatrix, N)
@@ -41,7 +40,7 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
 
     # Aquí puedes hacer lo que necesites con los resultados específicos de x_h
     # Por ejemplo, podrías graficar los resultados para cada valor de x_h
-    plt.plot(angle, Cl, label=f'x_h = {x_h}')
+    plt.plot(angle, Cl_flap, label=f'x_h = {x_h}')
 
 # Configuración del gráfico
 plt.title('Coeficiente de Sustentación (Cl) vs. Ángulo para diferentes valores de x_h')
