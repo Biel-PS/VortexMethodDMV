@@ -5,9 +5,7 @@ from scipy import integrate
 import Parameters as par
 import Vortex_Iteration as vi
 
-angle_FLAP = 4
-x_h = 1
-par.Parameters_definition(angle_FLAP,x_h)
+par.Parameters_definition()
 
 #Límite de integración
 th_p = np.arccos(1 - 2 * par.p)
@@ -58,7 +56,7 @@ print(CM_LE_tat)
 #Ara trobem valors de Cl i CM0 mitjançant DVM per N panells (entre 1 i 400)
 
 
-par.Parameters_definition(angle_FLAP,x_h)
+par.Parameters_definition()
 
 cont = 0
 

@@ -13,11 +13,9 @@ def MomentAC_Coeficient (circulation,infopanel):
     return -2*cmac*np.cos(par.alfa) , -2*cmxh*np.cos(par.alfa)
 
 N = par.M #Nombre de punts
-angle_FLAP = 0
-x_h = 1
 coord = np.zeros((N+1,2)) #files columnes; x y
 
-par.Parameters_definition(angle_FLAP,x_h)
+par.Parameters_definition()
 
 
 #vi.Calc_coord_Cosinus(coord,par.p,N)
