@@ -143,6 +143,7 @@ Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
 Cmac = np.zeros((int(lenght),1)) #coef cm0
 alfa_0 = np.zeros((int(lenght_xh),1))
+alfa_flap_0 = np.zeros((int(lenght_xh),1))
 increment_alfa_0 = np.zeros((int(lenght_xh),1))
 
 
@@ -170,14 +171,17 @@ for k in np.arange(start_xh,finish_xh+step_xh,step_xh):
 
     angle_array = np.array(angle).flatten()
     cl_array = np.array(Cl).flatten()
+    cl_flap_array = np.array(Cl_flap).flatten()
 
     "Cl slope"
     Cl_slope = np.polyfit(angle_array, cl_array, 1)
+    Cl_flap_slope = np.polyfit(angle_array, cl_flap_array, 1)
 
     print("Cl slope:", Cl_slope[0])
 
     "Alpha_0"
     alfa_0[cont_xh] = -Cl_slope[1] / Cl_slope[0]
+    "alfa_flap_0[cont_xh] = -Cl_flap_slope[1] / Cl_flap_slope[0]"
     print("alfa zero:", alfa_0)
 
     increment_alfa_0[cont_xh]=abs(alfa_0[cont_xh]-alfa_0[0])
