@@ -14,14 +14,12 @@ coord = np.zeros((N+1,2)) #files columnes; x y
 #vi.Calc_coord_Cosinus(coord,par.p,N)
 #print(coord)
 cont = 0
-angle_FLAP = 0
-x_h = 1
 start =0
 finish = 20
 step = 1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
-par.Parameters_definition(angle_FLAP,x_h)
+par.Parameters_definition()
 
 angle = np.zeros((int(lenght),1))
 Cl = np.zeros((int(lenght),1))#Cl con flap del ala

@@ -2,7 +2,7 @@
 
 import numpy as np
 f,p,alfa,xh,eta = 0.02,0.4,4,0,5
-def Parameters_definition(angle_FLAP,x_h):
+def Parameters_definition():
     global f,p,alfa,xh,eta
     naca = (0,0,1,5) #input("Insert NACA series:")
     f = int(naca[0])/100 #Maximum camber
