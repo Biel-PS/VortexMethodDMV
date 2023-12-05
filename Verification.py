@@ -6,7 +6,8 @@ import Parameters as par
 import Vortex_Iteration as vi
 
 par.Parameters_definition()
-
+par.alfa = 4*(np.pi/180)
+par.eta = 0
 #Límite de integración
 th_p = np.arccos(1 - 2 * par.p)
 
@@ -56,8 +57,6 @@ print(CM_LE_tat)
 #Ara trobem valors de Cl i CM0 mitjançant DVM per N panells (entre 1 i 400)
 
 
-par.Parameters_definition()
-
 cont = 0
 
 start =1
@@ -78,7 +77,6 @@ data = np.zeros((3, 200))
 for i in range(start,finish+step,step):
     start_time = time.time()
     coord = np.zeros((i + 1, 2))  # files columnes; x y
-    par.alfa = 4*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
     vi.Calc_coord_Cosinus(coord, par.p, i, par.xh, par.eta)
     #calulo con el angulo de 0
     infoMatrix = vi.Calc_panel(coord,i)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
@@ -97,11 +95,13 @@ for i in range(start,finish+step,step):
 
     N[cont] = i
     print(N[cont],data[1, i-1],data[2, i-1])
+
+    error = np.zeros((2, 200))
+    error[0, cont] = np.abs((data[1, i-1] - CL_tat) / CL_tat) * 100
+    error[1, cont] = np.abs((data[2, i-1] - CM_LE_tat) / CM_LE_tat) * 100
     cont += 1
 
-error = np.zeros((2, 200))
-error[0, :] = np.abs((data[1, i-1] - CL_tat) / CL_tat) * 100
-error[1, :] = np.abs((data[2, i-1] - CM_LE_tat) / CM_LE_tat) * 100
+#print(error[0])
 
 
 # Elapsed time plot
