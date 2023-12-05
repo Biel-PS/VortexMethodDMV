@@ -83,11 +83,6 @@ for i in range(start,finish+step,step):
     coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,i)
     Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
 
-    """print(infoMatrix)
-    print(coefMatrix)
-    print(RHSmatrix)
-    print(Circulation)
-"""
 
     data[0, i - 1] = time.time() - start_time
     data[1, i - 1], Cl_flap[cont] = vi.Lift_Coeficient(Circulation,infoMatrix) #Cl de el perfil completo i flap
@@ -100,8 +95,6 @@ for i in range(start,finish+step,step):
     error[0, cont] = np.abs((data[1, i-1] - CL_tat) / CL_tat) * 100
     error[1, cont] = np.abs((data[2, i-1] - CM_LE_tat) / CM_LE_tat) * 100
     cont += 1
-
-#print(error[0])
 
 
 # Elapsed time plot

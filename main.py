@@ -9,8 +9,6 @@ N = par.M #Nombre de punts
 coord = np.zeros((N+1,2)) #files columnes; x y
 
 
-
-
 #vi.Calc_coord_Cosinus(coord,par.p,N)
 #print(coord)
 cont = 0
