@@ -69,7 +69,7 @@ N = np.zeros(int(lenght))
 Cl_flap = np.zeros(int(lenght))#Cl del flap
 Cmxh = np.zeros(int(lenght))
 
-print('|Panels number|','|Cl perfil|','|Cmle|')
+print('|Panels number|','|Cl perfil|','|Cmle|', '|Error_CL|', '|Error_CM|')
 
 
 data = np.zeros((3, 200))
@@ -89,12 +89,16 @@ for i in range(start,finish+step,step):
     data[2, i - 1], Cmxh[cont] = vi.MomentLE_Coeficient(Circulation,infoMatrix)
 
     N[cont] = i
-    print(N[cont],data[1, i-1],data[2, i-1])
 
     error = np.zeros((2, 200))
     error[0, cont] = np.abs((data[1, i-1] - CL_tat) / CL_tat) * 100
     error[1, cont] = np.abs((data[2, i-1] - CM_LE_tat) / CM_LE_tat) * 100
+
+
+    print(N[cont],data[1, i-1],data[2, i-1], error[0,cont], error[1,cont])
+
     cont += 1
+
 
 
 # Elapsed time plot
