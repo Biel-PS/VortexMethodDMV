@@ -8,6 +8,7 @@ import Vortex_Iteration as vi
 par.Parameters_definition()
 par.alfa = 4*(np.pi/180)
 par.eta = 0
+par.xh = 1
 #Límite de integración
 th_p = np.arccos(1 - 2 * par.p)
 
@@ -71,7 +72,7 @@ Cmxh = np.zeros(int(lenght))
 
 print('|Panels number|','|Cl perfil|','|Cmle|', '|Error_CL|', '|Error_CM|')
 
-
+#rep = []
 data = np.zeros((3, 200))
 
 for i in range(start,finish+step,step):
@@ -98,9 +99,25 @@ for i in range(start,finish+step,step):
     print(N[cont],data[1, i-1],data[2, i-1], error[0,cont], error[1,cont])
 
     cont += 1
+    #rep.append(CL_tat)
+"""
+fig, ax1 = plt.subplots()
 
+color = 'tab:red'
+ax1.set_xlabel('flap deflection angle (s)')
+ax1.set_ylabel('Cl', color=color)
+ax1.plot(data[1,:], color=color)
+ax1.tick_params(axis='y', labelcolor=color)
 
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
+color = 'tab:blue'
+ax2.set_ylabel('Cmxh', color=color)  # we already handled the x-label with ax1
+ax2.plot(N,rep, color=color)
+ax2.tick_params(axis='y', labelcolor=color)
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.show()"""
 # Elapsed time plot
 plt.figure(figsize=(8, 6))
 plt.plot(data[0, :], label='Elapsed Time')
