@@ -106,55 +106,51 @@ for i in range(start,finish+step,step):
 # Elapsed time plot
 plt.figure(figsize=(8, 6))
 plt.plot(N, data[0, :], label='Elapsed Time')
-plt.xlabel('Panel Number')
+plt.xlabel('Number of panels')
 plt.ylabel('Elapsed Time (s)')
 plt.legend()
 plt.title('Elapsed Time Plot')
 plt.show()
 
-# ...
-# ...
 
 # CL convergence plot with error
 fig, ax1 = plt.subplots(figsize=(8, 6))
 
 color = 'tab:red'
-ax1.set_xlabel('Panel Number')
+ax1.set_xlabel('Number of panels')
 ax1.set_ylabel('CL', color=color)
-ax1.plot(N, data[1, :], label='CL', color=color)
-ax1.axhline(y=CL_tat, linestyle='--', color='gray', label='CL_tat')  # Línea constante
+ax1.plot(N, data[1, :], label='DVM', color=color)
+ax1.axhline(y=CL_tat, linestyle='--', color=color, label='TAT')  # Línea constante
 ax1.tick_params(axis='y', labelcolor=color)
 ax1.legend(loc='upper left')
 
 ax2 = ax1.twinx()
 color = 'tab:blue'
-ax2.set_ylabel('Error CL (%)', color=color)
+ax2.set_ylabel('Relative error (%)', color=color)
 ax2.plot(N, error[0, :], label='Error CL', color=color)
 ax2.tick_params(axis='y', labelcolor=color)
-ax2.legend(loc='upper right')
 
-plt.title('CL Convergence Plot with Error')
+plt.title('Convergence coefficient CL')
 plt.show()
 
 # CM convergence plot with error
 fig, ax1 = plt.subplots(figsize=(8, 6))
 
-color = 'tab:green'
-ax1.set_xlabel('Panel Number')
+color = 'tab:red'
+ax1.set_xlabel('Number of panels')
 ax1.set_ylabel('CM', color=color)
-ax1.plot(N, data[2, :], label='CM', color=color)
-ax1.axhline(y=CM_LE_tat, linestyle='--', color='gray', label='CM_LE_tat')  # Línea constante
+ax1.plot(N, data[2, :], label='DVM', color=color)
+ax1.axhline(y=CM_LE_tat, linestyle='--', color=color, label='TAT')  # Línea constante
 ax1.tick_params(axis='y', labelcolor=color)
 ax1.legend(loc='upper left')
 
 ax2 = ax1.twinx()
-color = 'tab:orange'
-ax2.set_ylabel('Error CM (%)', color=color)
+color = 'tab:blue'
+ax2.set_ylabel('Relative error (%)', color=color)
 ax2.plot(N, error[1, :], label='Error CM', color=color)
 ax2.tick_params(axis='y', labelcolor=color)
-ax2.legend(loc='upper right')
 
-plt.title('CM Convergence Plot with Error')
+plt.title('Convergence coefficient CM')
 plt.show()
 
 
