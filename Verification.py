@@ -113,6 +113,7 @@ plt.title('Elapsed Time Plot')
 plt.show()
 
 # ...
+# ...
 
 # CL convergence plot with error
 fig, ax1 = plt.subplots(figsize=(8, 6))
@@ -121,6 +122,7 @@ color = 'tab:red'
 ax1.set_xlabel('Panel Number')
 ax1.set_ylabel('CL', color=color)
 ax1.plot(N, data[1, :], label='CL', color=color)
+ax1.axhline(y=CL_tat, linestyle='--', color='gray', label='CL_tat')  # Línea constante
 ax1.tick_params(axis='y', labelcolor=color)
 ax1.legend(loc='upper left')
 
@@ -141,6 +143,7 @@ color = 'tab:green'
 ax1.set_xlabel('Panel Number')
 ax1.set_ylabel('CM', color=color)
 ax1.plot(N, data[2, :], label='CM', color=color)
+ax1.axhline(y=CM_LE_tat, linestyle='--', color='gray', label='CM_LE_tat')  # Línea constante
 ax1.tick_params(axis='y', labelcolor=color)
 ax1.legend(loc='upper left')
 
