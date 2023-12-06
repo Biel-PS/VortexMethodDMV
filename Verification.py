@@ -63,7 +63,7 @@ cont = 0
 start =1
 finish = 200
 step = 1
-lenght = np.abs(start/step)+np.abs(finish/step) + 1
+lenght = 200
 
 
 N = np.zeros(int(lenght))
@@ -72,8 +72,9 @@ Cmxh = np.zeros(int(lenght))
 
 print('|Panels number|','|Cl perfil|','|Cmle|', '|Error_CL|', '|Error_CM|')
 
-#rep = []
-data = np.zeros((3, 200))
+
+data = np.zeros((3, int(lenght)))
+error = np.zeros((2, int(lenght)))
 
 for i in range(start,finish+step,step):
     start_time = time.time()
@@ -85,65 +86,74 @@ for i in range(start,finish+step,step):
     Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
 
 
-    data[0, i - 1] = time.time() - start_time
-    data[1, i - 1], Cl_flap[cont] = vi.Lift_Coeficient(Circulation,infoMatrix) #Cl de el perfil completo i flap
-    data[2, i - 1], Cmxh[cont] = vi.MomentLE_Coeficient(Circulation,infoMatrix)
+    data[0, cont] = time.time() - start_time
+    data[1, cont], Cl_flap[cont] = vi.Lift_Coeficient(Circulation,infoMatrix) #Cl de el perfil completo i flap
+    data[2, cont], Cmxh[cont] = vi.MomentLE_Coeficient(Circulation,infoMatrix)
+
+    error[0, cont] = np.abs((data[1, cont] - CL_tat) / CL_tat) * 100
+    error[1, cont] = np.abs((data[2, cont] - CM_LE_tat) / CM_LE_tat) * 100
 
     N[cont] = i
 
-    error = np.zeros((2, 200))
-    error[0, cont] = np.abs((data[1, i-1] - CL_tat) / CL_tat) * 100
-    error[1, cont] = np.abs((data[2, i-1] - CM_LE_tat) / CM_LE_tat) * 100
 
 
-    print(N[cont],data[1, i-1],data[2, i-1], error[0,cont], error[1,cont])
+
+    print(N[cont],data[1, cont],data[2, cont], error[0,cont], error[1,cont])
 
     cont += 1
-    #rep.append(CL_tat)
-"""
-fig, ax1 = plt.subplots()
 
-color = 'tab:red'
-ax1.set_xlabel('flap deflection angle (s)')
-ax1.set_ylabel('Cl', color=color)
-ax1.plot(data[1,:], color=color)
-ax1.tick_params(axis='y', labelcolor=color)
 
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-color = 'tab:blue'
-ax2.set_ylabel('Cmxh', color=color)  # we already handled the x-label with ax1
-ax2.plot(N,rep, color=color)
-ax2.tick_params(axis='y', labelcolor=color)
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.show()"""
 # Elapsed time plot
 plt.figure(figsize=(8, 6))
-plt.plot(data[0, :], label='Elapsed Time')
+plt.plot(N, data[0, :], label='Elapsed Time')
 plt.xlabel('Panel Number')
 plt.ylabel('Elapsed Time (s)')
 plt.legend()
 plt.title('Elapsed Time Plot')
 plt.show()
 
-# CL convergence plot
-plt.figure(figsize=(8, 6))
-plt.plot(data[1, :], label='CL')
-plt.xlabel('Panel Number')
-plt.ylabel('CL')
-plt.legend()
-plt.title('CL Convergence Plot')
+# ...
+
+# CL convergence plot with error
+fig, ax1 = plt.subplots(figsize=(8, 6))
+
+color = 'tab:red'
+ax1.set_xlabel('Panel Number')
+ax1.set_ylabel('CL', color=color)
+ax1.plot(N, data[1, :], label='CL', color=color)
+ax1.tick_params(axis='y', labelcolor=color)
+ax1.legend(loc='upper left')
+
+ax2 = ax1.twinx()
+color = 'tab:blue'
+ax2.set_ylabel('Error CL (%)', color=color)
+ax2.plot(N, error[0, :], label='Error CL', color=color)
+ax2.tick_params(axis='y', labelcolor=color)
+ax2.legend(loc='upper right')
+
+plt.title('CL Convergence Plot with Error')
 plt.show()
 
-# CM convergence plot
-plt.figure(figsize=(8, 6))
-plt.plot(data[2, :], label='CM')
-plt.xlabel('Panel Number')
-plt.ylabel('CM')
-plt.legend()
-plt.title('CM Convergence Plot')
+# CM convergence plot with error
+fig, ax1 = plt.subplots(figsize=(8, 6))
+
+color = 'tab:green'
+ax1.set_xlabel('Panel Number')
+ax1.set_ylabel('CM', color=color)
+ax1.plot(N, data[2, :], label='CM', color=color)
+ax1.tick_params(axis='y', labelcolor=color)
+ax1.legend(loc='upper left')
+
+ax2 = ax1.twinx()
+color = 'tab:orange'
+ax2.set_ylabel('Error CM (%)', color=color)
+ax2.plot(N, error[1, :], label='Error CM', color=color)
+ax2.tick_params(axis='y', labelcolor=color)
+ax2.legend(loc='upper right')
+
+plt.title('CM Convergence Plot with Error')
 plt.show()
+
 
 ######################################################################
 
