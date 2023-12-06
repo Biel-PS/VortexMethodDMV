@@ -102,6 +102,7 @@ for i in range(start,finish+step,step):
 
     cont += 1
 
+print(f"primer valor: ", data[2,0])
 
 # Elapsed time plot
 plt.figure(figsize=(8, 6))
@@ -139,7 +140,7 @@ fig, ax1 = plt.subplots(figsize=(8, 6))
 color = 'tab:red'
 ax1.set_xlabel('Number of panels')
 ax1.set_ylabel('CM', color=color)
-ax1.plot(N, data[2, :], label='DVM', color=color)
+ax1.plot(N[:-1], data[2, 1:], label='DVM', color=color)
 ax1.axhline(y=CM_LE_tat, linestyle='--', color=color, label='TAT')  # Línea constante
 ax1.tick_params(axis='y', labelcolor=color)
 ax1.legend(loc='upper left')
@@ -147,7 +148,7 @@ ax1.legend(loc='upper left')
 ax2 = ax1.twinx()
 color = 'tab:blue'
 ax2.set_ylabel('Relative error (%)', color=color)
-ax2.plot(N, error[1, :], label='Error CM', color=color)
+ax2.plot(N[:-1], error[1, 1:], label='Error CM', color=color)
 ax2.tick_params(axis='y', labelcolor=color)
 
 plt.title('Convergence coefficient CM')
