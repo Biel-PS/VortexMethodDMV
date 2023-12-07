@@ -9,11 +9,13 @@ N = par.M #Nombre de punts
 coord = np.zeros((N+1,2)) #files columnes; x y
 
 
+
+
 #vi.Calc_coord_Cosinus(coord,par.p,N)
 #print(coord)
 cont = 0
-start =0
-finish = 1
+start =-10
+finish = 10
 step = 1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
@@ -24,20 +26,34 @@ Cl = np.zeros((int(lenght),1))#Cl con flap del ala
 Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
+print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
+for i in range(start,finish+step,step):
+    par.alfa = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
+    vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
+    #calulo con el angulo de 0
+    infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
+    coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,N)
+    Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
 
-vi.Calc_coord_UNIFORM(coord, par.p, par.M, par.xh , par.eta)
+    """print(infoMatrix)
+    print(coefMatrix)
+    print(RHSmatrix)
+    print(Circulation)
+"""
+    Cl[cont],Cl_flap[cont] =(vi.Lift_Coeficient(Circulation,infoMatrix)) #Cl de el perfil completo i flap
 
-infoMatrix = vi.Calc_panel(coord, N)  # VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
-coefMatrix, RHSmatrix = vi.Iteration_Process(infoMatrix, N)
-Circulation = vi.Circuilation_Calc(coefMatrix, RHSmatrix)
-Cl[cont], Cl_flap[cont] = vi.Lift_Coeficient(Circulation, infoMatrix)  # Cl de el perfil completo i flap
-Cmle[cont], Cmxh[cont] = vi.MomentLE_Coeficient(Circulation, infoMatrix)
-print(angle[cont], Cl[cont], Cl_flap[cont], Cmle[cont], Cmxh[cont], par.xh)
 
-print(coord)
+    Cmle[cont],Cmxh[cont] = (vi.MomentLE_Coeficient(Circulation,infoMatrix))
+
+    angle[cont] = i
+    print(angle[cont],Cl[cont],Cl_flap[cont],Cmle[cont],Cmxh[cont])
+    cont += 1
+
+
+"""print(coord)
 print(*zip(*coord))
 plt.scatter(*zip(*coord))
-plt.show()
+plt.show()"""
 """
 plt.plot(angle,Cl, color='black', linestyle='dashed', linewidth = 1,
          marker='o', markerfacecolor='black', markersize=4,label = 'cmle')
@@ -49,8 +65,8 @@ plt.legend()
 plt.title('Cl vs atack angle')
 plt.xlabel('Atack angle (deg)')
 plt.ylabel('Cl')
-plt.show()""""""
-#CODI PER IMPRIMIR PER PANTALLA EL GRAFIC DE CMXH I CL
+plt.show()"""
+#CODI PER IMPRIMIR PER PANTALLA EL GRAFIC DE CMXH I CL 
 fig, ax1 = plt.subplots()
 
 color = 'tab:red'
@@ -68,7 +84,7 @@ ax2.tick_params(axis='y', labelcolor=color)
 
 fig.tight_layout()  # otherwise the right y-label is slightly clipped
 plt.show()
-"""
+
 """print(f"infomatrix: ",infoMatrix[0])
 print(f"A: ", coefMatrix)
 print(f"Circulacion: ",Circulation)
