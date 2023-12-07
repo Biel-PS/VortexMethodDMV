@@ -69,6 +69,8 @@ lenght = 200
 N = np.zeros(int(lenght))
 Cl_flap = np.zeros(int(lenght))#Cl del flap
 Cmxh = np.zeros(int(lenght))
+m = np.zeros(int(lenght))
+
 
 print('|Panels number|','|Cl perfil|','|Cmle|', '|Error_CL|', '|Error_CM|')
 
@@ -94,11 +96,11 @@ for i in range(start,finish+step,step):
     error[1, cont] = np.abs((data[2, cont] - CM_LE_tat) / CM_LE_tat) * 100
 
     N[cont] = i
+    m[cont]= (data[1, cont]*1.225*69.16667**2*17)/(2*9.81)
 
 
-
-
-    print(N[cont],data[1, cont],data[2, cont], error[0,cont], error[1,cont])
+    print(N[cont], m[cont])
+    #print(N[cont],data[1, cont],data[2, cont], error[0,cont], error[1,cont])
 
     cont += 1
 
