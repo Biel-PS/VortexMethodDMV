@@ -127,7 +127,7 @@ plt.show()
 cont = 0
 cont_xh = 0
 
-par.xh=1
+par.xh= 1
 start_xh =1
 finish_xh = 0.5
 step_xh = -0.05

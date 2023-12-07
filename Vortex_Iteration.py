@@ -104,12 +104,17 @@ def Circuilation_Calc (a,RHS): #obtain the circulation matrix solving the matric
 def Lift_Coeficient (circulation,infopanel): #Calculate the cl using the circulation matrix
     Cl = 0
     Cl_flap = 0
+    Lift_flap = 0
     for i in range(0,len(circulation)): #add all the Cl using the adimensional kutta condition.
         Cl += circulation[i]
         if infopanel[i][2][0] > par.xh:
             Cl_flap += circulation[i]
 
-    return 2*Cl,2*(Cl_flap/(1-par.xh))
+    if par.xh != 0
+        Lift_flap = 2*(Cl_flap/(1-par.xh))
+    else
+        Lift_flap = 0
+    return 2*Cl,Lift_flap
 def MomentLE_Coeficient (circulation,infopanel):
     cmle = 0
     cmxh = 0
