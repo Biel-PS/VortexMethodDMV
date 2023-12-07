@@ -24,7 +24,7 @@ cont = 0
 
 start =-5
 finish = 10
-step = 0.5
+step = 1
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
 
@@ -34,6 +34,7 @@ Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
 Cmac = np.zeros((int(lenght),1)) #coef cm0
+
 
 print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
 for i in np.arange(start,finish+step,step):
@@ -126,12 +127,20 @@ plt.show()
 
 cont = 0
 cont_xh = 0
+cont_eta = 0
 
-par.xh= 1
+par.xh=1
 start_xh =1
 finish_xh = 0.5
 step_xh = -0.05
 lenght_xh = np.abs(start_xh/step_xh)-np.abs(finish_xh/step_xh)+1
+
+par.eta=0
+start_eta =0
+finish_eta = 10
+step_eta = 1
+lenght_eta = np.abs(start_eta/step_eta)+np.abs(finish_eta/step_eta)+1
+eta = np.zeros((int(lenght_eta),1))
 
 xh = np.zeros((int(lenght_xh),1))
 angle = np.zeros((int(lenght),1))
@@ -140,66 +149,84 @@ Cl_flap = np.zeros((int(lenght),1))#Cl del flap
 Cmle = np.zeros((int(lenght),1)) #coef de momentos del perfil
 Cmxh = np.zeros((int(lenght),1))
 Cmac = np.zeros((int(lenght),1)) #coef cm0
-alfa_0 = np.zeros((int(lenght_xh),1))
+alfa_0 = np.zeros((int(lenght_xh),int(lenght_eta)))
 alfa_flap_0 = np.zeros((int(lenght_xh),1))
 increment_alfa_0 = np.zeros((int(lenght_xh),1))
+
+effectiveness = np.zeros((int(lenght_xh),1))
+
 
 
 print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
 for k in np.arange(start_xh,finish_xh+step_xh,step_xh):
     print("Xh", cont_xh, ": -------------------------")
-    for i in np.arange(start,finish+step,step):
-        par.alfa = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
-        vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
-        #calulo con el angulo de 0
-        infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
-        coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,N)
-        Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
+    for j in np.arange(start_eta,finish_eta+step_eta,step_eta):
+        par.eta = j * (np.pi/180)
+        for i in np.arange(start,finish+step,step):
+            par.alfa = i*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
+            vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
+            #calulo con el angulo de 0
+            infoMatrix = vi.Calc_panel(coord,N)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
+            coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,N)
+            Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
 
 
-        Cl[cont],Cl_flap[cont] =(vi.Lift_Coeficient(Circulation,infoMatrix)) #Cl de el perfil completo i flap
+            Cl[cont],Cl_flap[cont] =(vi.Lift_Coeficient(Circulation,infoMatrix)) #Cl de el perfil completo i flap
 
 
-        Cmle[cont],Cmxh[cont]= (vi.MomentLE_Coeficient(Circulation,infoMatrix))
-        Cmac[cont], Cmxh[cont] = (MomentAC_Coeficient(Circulation, infoMatrix))
+            Cmle[cont],Cmxh[cont]= (vi.MomentLE_Coeficient(Circulation,infoMatrix))
+            Cmac[cont], Cmxh[cont] = (MomentAC_Coeficient(Circulation, infoMatrix))
 
-        angle[cont] = i
-        print(angle[cont],Cl[cont],Cl_flap[cont],Cmle[cont],Cmxh[cont])
-        cont += 1
+            angle[cont] = i
+            print(angle[cont],Cl[cont],Cl_flap[cont],Cmle[cont],Cmxh[cont])
+            cont += 1
 
-    angle_array = np.array(angle).flatten()
-    cl_array = np.array(Cl).flatten()
-    cl_flap_array = np.array(Cl_flap).flatten()
+        angle_array = np.array(angle).flatten()
+        cl_array = np.array(Cl).flatten()
+        cl_flap_array = np.array(Cl_flap).flatten()
 
-    "Cl slope"
-    Cl_slope = np.polyfit(angle_array, cl_array, 1)
-    Cl_flap_slope = np.polyfit(angle_array, cl_flap_array, 1)
+        "Cl slope"
+        Cl_slope = np.polyfit(angle_array, cl_array, 1)
+        Cl_flap_slope = np.polyfit(angle_array, cl_flap_array, 1)
 
-    print("Cl slope:", Cl_slope[0])
+        print("Cl slope:", Cl_slope[0])
 
-    "Alpha_0"
-    alfa_0[cont_xh] = -Cl_slope[1] / Cl_slope[0]
-    "alfa_flap_0[cont_xh] = -Cl_flap_slope[1] / Cl_flap_slope[0]"
-    print("alfa zero:", alfa_0)
+        "Alpha_0"
+        alfa_0[cont_xh][cont_eta] = -Cl_slope[1] / Cl_slope[0]
+        "alfa_flap_0[cont_xh] = -Cl_flap_slope[1] / Cl_flap_slope[0]"
+        print("alfa zero:", alfa_0)
 
-    increment_alfa_0[cont_xh]=abs(alfa_0[cont_xh]-alfa_0[0])
+        "increment_alfa_0[cont_xh]=abs(alfa_0[cont_xh]-alfa_0[0])"
 
-    cont = 0
-    angle = np.zeros((int(lenght),1))
+        cont = 0
+        angle = np.zeros((int(lenght),1))
+
+        eta[cont_eta]=par.eta * (180/np.pi)
+        cont_eta += 1
+
+    cont_eta=0
+    par.eta=0
+    alfa_0_array = np.array(alfa_0[cont_xh]).flatten()
+    eta_array = np.array(eta).flatten()
+
+    effectiveness_slope = np.polyfit(eta_array, alfa_0_array, 1)
+    effectiveness[cont_xh] = abs(effectiveness_slope[0])
+
     par.xh += step_xh
     xh[cont_xh] = 1-k
     cont_xh += 1
 
+effectiveness[0]=0
 print(alfa_0)
 print(xh)
-print(increment_alfa_0)
+print(effectiveness)
 
-plt.plot(xh,increment_alfa_0, color='black', linestyle='dashed', linewidth = 1,
-         marker='o', markerfacecolor='black', markersize=4,label = 'increment alpha 0')
+plt.plot(xh,effectiveness, color='black', linestyle='dashed', linewidth = 1,
+         marker='o', markerfacecolor='black', markersize=4,label = 'Flap effectiveness')
 plt.grid(color='black', linestyle='--', linewidth=0.5)
 
 plt.legend()
-plt.title('Delta Alpha_0 - flap position')
+plt.title('Flap effectiveness - Flap position')
 plt.xlabel('Flap position')
-plt.ylabel('Delta alpha_0')
+plt.ylabel('Flap effectiveness')
 plt.show()
