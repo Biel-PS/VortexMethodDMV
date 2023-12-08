@@ -129,11 +129,12 @@ cont = 0
 cont_xh = 0
 cont_eta = 0
 
-par.xh=1
-start_xh =1
-finish_xh = 0.5
+
+start_xh = 0.85
+finish_xh = 0.70
 step_xh = -0.05
 lenght_xh = np.abs(start_xh/step_xh)-np.abs(finish_xh/step_xh)+1
+par.xh = start_xh
 
 par.eta=0
 start_eta =0
@@ -158,7 +159,7 @@ effectiveness = np.zeros((int(lenght_xh),1))
 
 
 print('|Angle [deg]|','|Cl perfil|', '|Delta Cl flap|','|Cmle|','|Cmxh|')
-for k in np.arange(start_xh,finish_xh+step_xh,step_xh):
+for k in np.arange(start_xh,finish_xh,step_xh):
     print("Xh", cont_xh, ": -------------------------")
     for j in np.arange(start_eta,finish_eta+step_eta,step_eta):
         par.eta = j * (np.pi/180)
@@ -216,13 +217,19 @@ for k in np.arange(start_xh,finish_xh+step_xh,step_xh):
     xh[cont_xh] = 1-k
     cont_xh += 1
 
-effectiveness[0]=0
+"effectiveness[0]=0"
 print(alfa_0)
 print(xh)
 print(effectiveness)
 
+effectiveness_Experimental = [0.39,0.475,0.54,0.595]
+
 plt.plot(xh,effectiveness, color='black', linestyle='dashed', linewidth = 1,
-         marker='o', markerfacecolor='black', markersize=4,label = 'Flap effectiveness')
+         marker='o', markerfacecolor='black', markersize=4,label = 'DVM')
+plt.plot(xh,effectiveness_Experimental, color='blue', linestyle='dashed', linewidth = 1,
+         marker='o', markerfacecolor='black', markersize=4,label = 'Experimental')
+plt.plot(xh,effectiveness*0.85, color='red', linestyle='dashed', linewidth = 1,
+         marker='o', markerfacecolor='black', markersize=4,label = 'DVM Corrected')
 plt.grid(color='black', linestyle='--', linewidth=0.5)
 
 plt.legend()
