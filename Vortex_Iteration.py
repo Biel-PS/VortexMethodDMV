@@ -22,9 +22,11 @@ def Calc_coord_Cosinus (cordMatrix,p,N,xh,eta): #Create the node points using an
     angleMatrix = [[np.cos(par.eta),np.sin(par.eta)],[-np.sin(par.eta),np.cos(par.eta)]]
     cont = 0
     Control = True
-
-    Fa1 = (par.f/par.p**2)
-    Fa2 = (par.f/  (1-par.p) ** 2 )
+    if par.p != 0:
+        Fa1 = (par.f/ par.p**2)
+        Fa2 = (par.f/(1-par.p) ** 2 )
+    else:
+        Fa1,Fa2 = 0,0
 
     while Control:
         x = 0.5*(1-np.cos(np.pi*((cont)/(N))))
@@ -102,18 +104,28 @@ def Circuilation_Calc (a,RHS): #obtain the circulation matrix solving the matric
 def Lift_Coeficient (circulation,infopanel): #Calculate the cl using the circulation matrix
     Cl = 0
     Cl_flap = 0
+    Lift_flap = 0
     for i in range(0,len(circulation)): #add all the Cl using the adimensional kutta condition.
         Cl += circulation[i]
         if infopanel[i][2][0] > par.xh:
             Cl_flap += circulation[i]
 
-    return 2*Cl,2*Cl_flap
+    if par.xh == 1:
+        Lift_flap = 0
+    else:
+        Lift_flap = 2 * (Cl_flap / (1 - par.xh))
+    return 2*Cl,Lift_flap
 def MomentLE_Coeficient (circulation,infopanel):
     cmle = 0
     cmxh = 0
-    for i in range (0,len(circulation)):
-        cmle += circulation[i]*(infopanel[i][3][0])
-        if infopanel[i][2][0]>=par.xh:
-            cmxh+= circulation[i]*(infopanel[i][3][0]-par.xh)
-    return -2*cmle*np.cos(par.alfa) , -2*cmxh*np.cos(par.alfa)
+    Mxh = 0
+    for i in range(0, len(circulation)):
+        cmle += circulation[i] * (infopanel[i][3][0])
+        if infopanel[i][2][0] >= par.xh:
+            cmxh += circulation[i] * (infopanel[i][3][0] - par.xh)
+    if par.xh == 1:
+        Mxh = 0
+    else:
+        Mxh = -2 * cmxh * np.cos(par.alfa) / (1 - par.xh) ** 2
+    return -2 * cmle * np.cos(par.alfa),Mxh
 
