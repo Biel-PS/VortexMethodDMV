@@ -24,9 +24,11 @@ cont = 0
 
 start =-5
 finish = 10
-step = 1
+step = 0.5
 lenght = np.abs(start/step)+np.abs(finish/step) + 1
 
+par.xh = 1.0
+par.eta = 0
 
 angle = np.zeros((int(lenght),1))
 Cl = np.zeros((int(lenght),1))#Cl con flap del ala
@@ -60,14 +62,17 @@ for i in np.arange(start,finish+step,step):
 angle_array = np.array(angle).flatten()
 cl_array = np.array(Cl).flatten()
 cmac_array = np.array(Cmac).flatten()
+cmle_array = np.array(Cmle).flatten()
 
 "Cl slope"
 Cl_slope = np.polyfit(angle_array, cl_array, 1)
 Cmac_slope = np.polyfit(cl_array,cmac_array,1)
+Cmle_slope = np.polyfit(cl_array,cmle_array,1)
+print("Cmle_Cl:",Cmle_slope)
 
 print("Cl slope:",Cl_slope[0])
 print(Cmac_slope)
-print("Cmo:",Cmac_slope[0]*cl_array[int((start+finish)/2)]+Cmac_slope[1])
+print("Cmo:",Cmac_slope[0]*cl_array[int(finish)]+Cmac_slope[1])
 "Cmac = Cmac_slope[0]*Cl + Cmac_slope[1]"
 
 "Alpha_0"
@@ -79,6 +84,7 @@ print("alfa zero:",alfa_0)
 
 plt.plot(angle,Cl, color='black', linestyle='dashed', linewidth = 1,
          marker='o', markerfacecolor='black', markersize=4,label = 'Cl')
+
 
 plt.grid(color='black', linestyle='--', linewidth=0.5)
 
