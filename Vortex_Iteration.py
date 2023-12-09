@@ -104,3 +104,4 @@ def MomentLE_Coeficient (circulation,infopanel):#Càlcul de Cmle i Cmxh del perf
         Mxh = -2 * cmxh * np.cos(par.alfa) / (1 - par.xh) ** 2
     return -2 * cmle * np.cos(par.alfa),Mxh #Retorna Cmle i Cmxh del perfil i el flap respectivament
 
+#hola
