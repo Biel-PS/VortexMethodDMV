@@ -33,7 +33,7 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
     Cmle = np.zeros((int(lenght), 1))  # coef de momentos del perfil respecto borde de ataque
     Cmxh = np.zeros((int(lenght), 1))  # coef de momentos del flap respecto eje de charnela
 
-    for i in range(eta_inicial, eta_final + step, step):
+    for i in np.arange(eta_inicial, eta_final + step, step):
         par.eta = (i * (np.pi / 180))  # convertimos el ángulo a radianes
 
         vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
@@ -53,28 +53,28 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
     # Por ejemplo, podrías graficar los resultados para cada valor de x_h
     #plt.plot(angle, Cmxh, label=f'x_h = {x_h}',)
 
-    ax1.plot(angle, Cl_flap, color='tab:red',linestyle = linstyle[plotcont])
-    ax2.plot(angle, Cmxh, color='k', linestyle=linstyle[plotcont],label=f'x_h = {x_h}')
-    ax2.plot(angle, Cmxh, color='tab:blue',linestyle = linstyle[plotcont])
+    ax1.plot(angle, Cl, color='tab:red',linestyle = linstyle[plotcont])
+    ax2.plot(angle, Cmle, color='k', linestyle=linstyle[plotcont],label=f'E= {np.round(100*(1-x_h))/100}')
+    ax2.plot(angle, Cmle, color='tab:blue',linestyle = linstyle[plotcont])
 
     plotcont +=1
 # Configuración del gráfico
-plt.title('Cl flap and Cmxh hinge vs. the angle of flap defflection to different values of x_h')
+plt.title('Cl and Cm to leading edge vs. the angle of flap deflection to different values of E')
 plt.legend(loc = 'upper center')
 ax1.grid(True,axis = 'both')
 
 
 
 color = 'tab:red'
-ax1.set_xlabel('Flap defelction angle (deg)')
-ax1.set_ylabel('Cl flap', color=color)
+ax1.set_xlabel('Flap deflection angle (deg)')
+ax1.set_ylabel('Cl', color=color)
 
 ax1.tick_params(axis='y', labelcolor=color)
 
 
 
 color = 'tab:blue'
-ax2.set_ylabel('Cm_xh (hinge) flap', color=color)  # we already handled the x-label with ax1
+ax2.set_ylabel('Cm leading edge', color=color)  # we already handled the x-label with ax1
 ax2.tick_params(axis='y', labelcolor=color)
 
 fig.tight_layout()  # otherwise the right y-label is slightly clipped

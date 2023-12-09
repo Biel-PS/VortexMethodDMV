@@ -19,7 +19,8 @@ def Calc_coord_UNIFORM (cordMatrix,p,N,xh,eta): #Create the node points using a 
             cordMatrix[i] = np.matmul(angleMatrix,
                                       [cordMatrix[i][0] - xh, cordMatrix[i][1]]) + [xh, 0]
 def Calc_coord_Cosinus (cordMatrix,p,N,xh,eta): #Creem els nodes del perfil mirjançant l'aproximació angular
-    angleMatrix,cont,Control= [[np.cos(par.eta),np.sin(par.eta)],[-np.sin(par.eta),np.cos(par.eta)]],0,True
+    cont,Control=0,True
+    angleMatrix = [[np.cos(eta), np.sin(eta)], [-np.sin(eta), np.cos(eta)]]
     if par.p != 0:
         Fa1,Fa2 = (par.f/ par.p**2),(par.f/(1-par.p) ** 2 )
     else:
@@ -29,7 +30,7 @@ def Calc_coord_Cosinus (cordMatrix,p,N,xh,eta): #Creem els nodes del perfil mirj
         if x < p: #Definim la primera part de la parabola seguint l'estandard NACA 4-digit
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] =  Fa1 * (2*par.p*x - x**2)
-        elif x >= p and x<0.99999999:#Definim la segona paràbola
+        elif x >= p and x!=1:#Definim la segona paràbola
             cordMatrix[cont,0] = x
             cordMatrix[cont,1] =  Fa2 * ((1 - 2 * par.p) + 2 * par.p * x - x**2)
         else: #Imposem la posició de l'últim node
@@ -38,7 +39,7 @@ def Calc_coord_Cosinus (cordMatrix,p,N,xh,eta): #Creem els nodes del perfil mirj
             Control = False
         cont += 1
     for i in range(0,len(cordMatrix)):#Rotem els punts respecte Xhinge (en cas de eta =! 0)
-        if cordMatrix[i][0] >= xh and eta !=0:
+        if cordMatrix[i][0] > xh and eta !=0:
             cordMatrix[i] = np.matmul(angleMatrix,[cordMatrix[i][0]-xh,cordMatrix[i][1]]) + [xh,0]
 
 def Calc_panel (cordMatrix,N): #Discretizem en panells el perfil
@@ -85,23 +86,23 @@ def Lift_Coeficient (circulation,infopanel): #Càlcul del Cl del perfil i del fl
     Cl,Cl_flap,Lift_flap  = 0,0,0
     for i in range(0,len(circulation)):#Càlcul de la component discreta de Cl
         Cl += circulation[i]
-        if infopanel[i][2][0] > par.xh: #Càlcul de la component discreta del Clflap
+        if infopanel[i][3][0] > par.xh: #Càlcul de la component discreta del Clflap
             Cl_flap += circulation[i]
-    if par.xh == 1: #Per prevenir indeterminacion en Clflap
+    if par.xh == 1: #Per prevenir indeterminació en Clflap
         Lift_flap = 0
     else:
         Lift_flap = 2 * (Cl_flap / (1 - par.xh))#Clflap en funció de la corda del flap
-    return 2*Cl,Lift_flap #Cl del perfil i Cl del flap
+    return 2*Cl, Lift_flap #Cl del perfil i Cl del flap
 def MomentLE_Coeficient (circulation,infopanel):#Càlcul de Cmle i Cmxh del perfil i del flap amb la condició de Kutta-Joukowski
     cmle,cmxh,Mxh = 0,0,0
     for i in range(0, len(circulation)): #Càlcul de les components discretes dels coeficients
         cmle += circulation[i] * (infopanel[i][3][0])
-        if infopanel[i][2][0] >= par.xh:
+        if infopanel[i][3][0] >= par.xh:
             cmxh += circulation[i] * (infopanel[i][3][0] - par.xh)
     if par.xh == 1:#Condició d'indeterminació
         Mxh = 0
     else:
-        Mxh = -2 * cmxh * np.cos(par.alfa) / (1 - par.xh) ** 2
-    return -2 * cmle * np.cos(par.alfa),Mxh #Retorna Cmle i Cmxh del perfil i el flap respectivament
+        Mxh = -2 * cmxh * np.cos(par.alfa) / ((1 - par.xh)**2)
+    return -2 * cmle * np.cos(par.alfa), Mxh #Retorna Cmle i Cmxh del perfil i el flap respectivament
 
 #hola
