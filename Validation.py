@@ -78,35 +78,35 @@ print("alfa zero:",alfa_0)
 "Cl vs alpha"
 
 plt.plot(angle,Cl, color='black', linestyle='dashed', linewidth = 1,
-         marker='o', markerfacecolor='black', markersize=4,label = 'cl')
+         marker='o', markerfacecolor='black', markersize=4,label = 'Cl')
 
 plt.grid(color='black', linestyle='--', linewidth=0.5)
 
 plt.legend()
-plt.title('Cl vs atack angle')
-plt.xlabel('Atack angle (deg)')
+plt.title('Linear range of lift coefficient')
+plt.xlabel('Angle of attack (deg)')
 plt.ylabel('Cl')
 plt.show()
 
 "Cmle vs alpha"
 plt.plot(angle,Cmle, color='blue', linestyle='dashed', linewidth = 1,
-         marker='o', markerfacecolor='black', markersize=4,label = 'cmle')
+         marker='o', markerfacecolor='black', markersize=4,label = 'Cmle')
 plt.grid(color='black', linestyle='--', linewidth=0.5)
 
 plt.legend()
-plt.title('Cl vs atack angle')
-plt.xlabel('Atack angle (deg)')
-plt.ylabel('Cl')
+plt.title('Linear range of moment coefficient at leading edge')
+plt.xlabel('Angle of attack (deg)')
+plt.ylabel('Cmle')
 plt.show()
 
 "Cm0 vs Cl"
 plt.plot(Cl,Cmac, color='black', linestyle='dashed', linewidth = 1,
-         marker='o', markerfacecolor='black', markersize=4,label = 'cm0')
+         marker='o', markerfacecolor='black', markersize=4,label = 'Cm0')
 plt.grid(color='black', linestyle='--', linewidth=0.5)
 
 plt.ylim(-1.25, 1.25)
 plt.legend()
-plt.title('Cm0 vs Cl')
+plt.title('Moment coefficient at aerodynamic center')
 plt.xlabel('Cl')
 plt.ylabel('Cm0')
 plt.show()
