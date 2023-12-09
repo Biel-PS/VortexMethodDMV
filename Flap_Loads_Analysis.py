@@ -21,7 +21,7 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
 
     cont = 0
     eta_inicial = 0
-    eta_final = 20
+    eta_final = 15
     step = 1
     lenght = np.abs(eta_inicial/step) + np.abs(eta_final/step) + 1
     angle = np.zeros((int(lenght), 1))
@@ -61,6 +61,8 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
 # Configuración del gráfico
 plt.title('Cl and Cm to leading edge vs. the angle of flap deflection to different values of E')
 plt.legend(loc = 'upper center')
+plt.xlim((0,15))
+plt.xticks([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
 ax1.grid(True,axis = 'both')
 
 
