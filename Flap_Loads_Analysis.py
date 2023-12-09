@@ -52,7 +52,7 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
     plotcont += 1
 
 # Configuración del gráfico
-plt.title('Cl flap and Cmxh hinge vs. the angle of flap defflection to different values of x_h')
+plt.title('Cl flap and Cmxh hinge vs. the angle of flap deflection to different values of x_h')
 plt.legend(loc = 'upper center')
 ax1.grid(True,axis = 'both')
 
