@@ -6,7 +6,9 @@ import Parameters as par
 import Vortex_Iteration as vi
 
 par.Parameters_definition()
-
+par.alfa = 4*(np.pi/180)
+par.eta = 0
+par.xh = 1
 #Límite de integración
 th_p = np.arccos(1 - 2 * par.p)
 
@@ -56,80 +58,102 @@ print(CM_LE_tat)
 #Ara trobem valors de Cl i CM0 mitjançant DVM per N panells (entre 1 i 400)
 
 
-par.Parameters_definition()
-
 cont = 0
 
 start =1
 finish = 200
 step = 1
-lenght = np.abs(start/step)+np.abs(finish/step) + 1
+lenght = 200
 
 
 N = np.zeros(int(lenght))
 Cl_flap = np.zeros(int(lenght))#Cl del flap
 Cmxh = np.zeros(int(lenght))
+m = np.zeros(int(lenght))
 
-print('|Panels number|','|Cl perfil|','|Cmle|')
+
+print('|Panels number|','|Cl perfil|','|Cmle|', '|Error_CL|', '|Error_CM|')
 
 
-data = np.zeros((3, 200))
+data = np.zeros((3, int(lenght)))
+error = np.zeros((2, int(lenght)))
 
 for i in range(start,finish+step,step):
     start_time = time.time()
     coord = np.zeros((i + 1, 2))  # files columnes; x y
-    par.alfa = 4*(np.pi/180) #CANVIAR par.eta PER par.alfa SI ES VOL FER ANALÍSI D'ANGLE D'ATAC!!
     vi.Calc_coord_Cosinus(coord, par.p, i, par.xh, par.eta)
     #calulo con el angulo de 0
     infoMatrix = vi.Calc_panel(coord,i)#VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
     coefMatrix,RHSmatrix = vi.Iteration_Process(infoMatrix,i)
     Circulation = vi.Circuilation_Calc(coefMatrix,RHSmatrix)
 
-    """print(infoMatrix)
-    print(coefMatrix)
-    print(RHSmatrix)
-    print(Circulation)
-"""
 
-    data[0, i - 1] = time.time() - start_time
-    data[1, i - 1], Cl_flap[cont] = vi.Lift_Coeficient(Circulation,infoMatrix) #Cl de el perfil completo i flap
-    data[2, i - 1], Cmxh[cont] = vi.MomentLE_Coeficient(Circulation,infoMatrix)
+    data[0, cont] = time.time() - start_time
+    data[1, cont], Cl_flap[cont] = vi.Lift_Coeficient(Circulation,infoMatrix) #Cl de el perfil completo i flap
+    data[2, cont], Cmxh[cont] = vi.MomentLE_Coeficient(Circulation,infoMatrix)
+
+    error[0, cont] = np.abs((data[1, cont] - CL_tat) / CL_tat) * 100
+    error[1, cont] = np.abs((data[2, cont] - CM_LE_tat) / CM_LE_tat) * 100
 
     N[cont] = i
-    print(N[cont],data[1, i-1],data[2, i-1])
+    m[cont]= (data[1, cont]*1.225*69.16667**2*17)/(2*9.81)#hh
+
+
+    print(N[cont], m[cont])
+    #print(N[cont],data[1, cont],data[2, cont], error[0,cont], error[1,cont])
+
     cont += 1
-
-error = np.zeros((2, 200))
-error[0, :] = np.abs((data[1, i-1] - CL_tat) / CL_tat) * 100
-error[1, :] = np.abs((data[2, i-1] - CM_LE_tat) / CM_LE_tat) * 100
-
 
 # Elapsed time plot
 plt.figure(figsize=(8, 6))
-plt.plot(data[0, :], label='Elapsed Time')
-plt.xlabel('Panel Number')
+plt.plot(N, data[0, :], label='Elapsed Time')
+plt.xlabel('Number of panels')
 plt.ylabel('Elapsed Time (s)')
 plt.legend()
 plt.title('Elapsed Time Plot')
 plt.show()
 
-# CL convergence plot
-plt.figure(figsize=(8, 6))
-plt.plot(data[1, :], label='CL')
-plt.xlabel('Panel Number')
-plt.ylabel('CL')
-plt.legend()
-plt.title('CL Convergence Plot')
+
+# CL convergence plot with error
+fig, ax1 = plt.subplots(figsize=(8, 6))
+
+color = 'tab:red'
+ax1.set_xlabel('Number of panels')
+ax1.set_ylabel('CL', color=color)
+ax1.plot(N, data[1, :], label='DVM', color=color)
+ax1.axhline(y=CL_tat, linestyle='--', color=color, label='TAT')  # Línea constante
+ax1.tick_params(axis='y', labelcolor=color)
+ax1.legend(loc='upper left')
+
+ax2 = ax1.twinx()
+color = 'tab:blue'
+ax2.set_ylabel('Relative error (%)', color=color)
+ax2.plot(N, error[0, :], label='Error CL', color=color)
+ax2.tick_params(axis='y', labelcolor=color)
+
+plt.title('Convergence coefficient CL')
 plt.show()
 
-# CM convergence plot
-plt.figure(figsize=(8, 6))
-plt.plot(data[2, :], label='CM')
-plt.xlabel('Panel Number')
-plt.ylabel('CM')
-plt.legend()
-plt.title('CM Convergence Plot')
+# CM convergence plot with error
+fig, ax1 = plt.subplots(figsize=(8, 6))
+
+color = 'tab:red'
+ax1.set_xlabel('Number of panels')
+ax1.set_ylabel('CM', color=color)
+ax1.plot(N[:-1], data[2, 1:], label='DVM', color=color)
+ax1.axhline(y=CM_LE_tat, linestyle='--', color=color, label='TAT')  # Línea constante
+ax1.tick_params(axis='y', labelcolor=color)
+ax1.legend(loc='upper left')
+
+ax2 = ax1.twinx()
+color = 'tab:blue'
+ax2.set_ylabel('Relative error (%)', color=color)
+ax2.plot(N[:-1], error[1, 1:], label='Error CM', color=color)
+ax2.tick_params(axis='y', labelcolor=color)
+
+plt.title('Convergence coefficient CM')
 plt.show()
+
 
 ######################################################################
 
