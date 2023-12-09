@@ -10,9 +10,15 @@ coord = np.zeros((N+1, 2))  # filas, columnas; x y
 
 # Lista de valores de x_h para iterar
 x_h_values = [0.7, 0.75, 0.8, 0.85]
+linstyle = ['solid','dotted','dashed',"dashdot"]
+par.Parameters_definition()  # definimos los parámetros
+fig, ax1 = plt.subplots()
+plotcont = 0
+ax2 = ax1.twinx()
 print('|Angle [deg]|', '|Cl perfil|', '|Delta Cl flap|', '|Cmle|', '|Cmxh|', '|xh|')
 for x_h in x_h_values: #recorre los diferentes valores de xh
-    alfa = -16.525597751298992 * (np.pi / 180)
+    alfa = -4.132098212837608 * (np.pi / 180)
+    par.alfa = alfa
     cont = 0
     eta_inicial = 0
     eta_final = 15
@@ -25,7 +31,7 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
     Cmle = np.zeros((int(lenght), 1))  # coef de momentos del perfil respecto borde de ataque
     Cmxh = np.zeros((int(lenght), 1))  # coef de momentos del flap respecto eje de charnela
     for i in range(eta_inicial, eta_final + step, step):
-        par.Parameters_definition()  # definimos los parámetros
+
         par.eta = i * (np.pi / 180)  # convertimos el ángulo a radianes
         vi.Calc_coord_Cosinus(coord, par.p, N, x_h, i)
         # calculamos con el ángulo de 0
@@ -40,13 +46,29 @@ for x_h in x_h_values: #recorre los diferentes valores de xh
 
     # Aquí puedes hacer lo que necesites con los resultados específicos de x_h
     # Por ejemplo, podrías graficar los resultados para cada valor de x_h
-    plt.plot(angle, Cl, label=f'x_h = {x_h}')
+    ax1.plot(angle, Cl, color='tab:red', linestyle=linstyle[plotcont])
+    ax2.plot(angle, Cmxh, color='k', linestyle=linstyle[plotcont], label=f'x_h = {x_h}')
+    ax2.plot(angle, Cmxh, color='tab:blue', linestyle=linstyle[plotcont])
+    plotcont += 1
 
 # Configuración del gráfico
-plt.title('Cl y Cm_LE vs. Ángulo de deflección')
-plt.xlabel('Ángulo (grados)')
-plt.ylabel('Cl')
-plt.legend()
-plt.grid(True)
-plt.show()
+plt.title('Cl flap and Cmxh hinge vs. the angle of flap defflection to different values of x_h')
+plt.legend(loc = 'upper center')
+ax1.grid(True,axis = 'both')
 
+
+
+color = 'tab:red'
+ax1.set_xlabel('Flap defelction angle (deg)')
+ax1.set_ylabel('Cl flap', color=color)
+
+ax1.tick_params(axis='y', labelcolor=color)
+
+
+
+color = 'tab:blue'
+ax2.set_ylabel('Cm_xh (hinge) flap', color=color)  # we already handled the x-label with ax1
+ax2.tick_params(axis='y', labelcolor=color)
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.show()
