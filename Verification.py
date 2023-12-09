@@ -11,6 +11,7 @@ par.eta = 0
 par.xh = 1
 #Límite de integración
 th_p = np.arccos(1 - 2 * par.p)
+print(f"theta_tp: ", th_p)
 
 #Definimos las funciones que se integraran mas adelante
 def dz(th):
@@ -72,7 +73,7 @@ Cmxh = np.zeros(int(lenght))
 m = np.zeros(int(lenght))
 
 
-print('|Panels number|','|Cl perfil|','|Cmle|', '|Error_CL|', '|Error_CM|')
+print('|Panels number|','|Cl perfil|','|Cmle|', '|Error_CL|', '|Error_CM|',  '|Massa|')
 
 
 data = np.zeros((3, int(lenght)))
@@ -96,11 +97,9 @@ for i in range(start,finish+step,step):
     error[1, cont] = np.abs((data[2, cont] - CM_LE_tat) / CM_LE_tat) * 100
 
     N[cont] = i
-    m[cont]= (data[1, cont]*1.225*69.16667**2*17)/(2*9.81)#hh
+    m[cont]= (data[1, cont]*0.82*69.16667**2*17)/(2*9.81)#hh
 
-
-    print(N[cont], m[cont])
-    #print(N[cont],data[1, cont],data[2, cont], error[0,cont], error[1,cont])
+    print(N[cont],data[1, cont],data[2, cont], error[0,cont], error[1,cont], m[cont])
 
     cont += 1
 
