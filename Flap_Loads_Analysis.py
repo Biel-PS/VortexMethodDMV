@@ -10,49 +10,56 @@ coord = np.zeros((N+1, 2))  # filas, columnas; x y
 
 # Lista de valores de x_h para iterar
 x_h_values = [0.7, 0.75, 0.8, 0.85]
+par.Parameters_definition()
+print('|Angle [deg]|', '|Cl perfil|', '|Delta Cl flap|', '|Cmle|', '|Cmxh|', '|xh|')
 linstyle = ['solid','dotted','dashed',"dashdot"]
-par.Parameters_definition()  # definimos los parámetros
 fig, ax1 = plt.subplots()
 plotcont = 0
-ax2 = ax1.twinx()
-print('|Angle [deg]|', '|Cl perfil|', '|Delta Cl flap|', '|Cmle|', '|Cmxh|', '|xh|')
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+par.alfa = -4.122165434101164* (np.pi / 180)
 for x_h in x_h_values: #recorre los diferentes valores de xh
-    alfa = -4.132098212837608 * (np.pi / 180)
-    par.alfa = alfa
+
     cont = 0
     eta_inicial = 0
-    eta_final = 15
+    eta_final = 20
     step = 1
     lenght = np.abs(eta_inicial/step) + np.abs(eta_final/step) + 1
     angle = np.zeros((int(lenght), 1))
-    hinge_pos = x_h
+
+    par.xh = x_h
+
     Cl = np.zeros((int(lenght), 1))  # Cl con flap del ala
     Cl_flap = np.zeros((int(lenght), 1))  # Cl del flap
     Cmle = np.zeros((int(lenght), 1))  # coef de momentos del perfil respecto borde de ataque
     Cmxh = np.zeros((int(lenght), 1))  # coef de momentos del flap respecto eje de charnela
-    for i in range(eta_inicial, eta_final + step, step):
 
-        par.eta = i * (np.pi / 180)  # convertimos el ángulo a radianes
-        vi.Calc_coord_Cosinus(coord, par.p, N, x_h, i)
+    for i in range(eta_inicial, eta_final + step, step):
+        par.eta = (i * (np.pi / 180))  # convertimos el ángulo a radianes
+
+        vi.Calc_coord_Cosinus(coord, par.p, N, par.xh, par.eta)
         # calculamos con el ángulo de 0
         infoMatrix = vi.Calc_panel(coord, N)  # VECTOR NORMAL, VECTOR TANGENTE, X LUMPED VORTEX, X CONTROL POINT
         coefMatrix, RHSmatrix = vi.Iteration_Process(infoMatrix, N)
         Circulation = vi.Circuilation_Calc(coefMatrix, RHSmatrix)
         Cl[cont], Cl_flap[cont] = vi.Lift_Coeficient(Circulation, infoMatrix)  # Cl de el perfil completo i flap
+
         Cmle[cont], Cmxh[cont] = vi.MomentLE_Coeficient(Circulation, infoMatrix)
+
         angle[cont] = i
-        print(angle[cont], Cl[cont], Cl_flap[cont], Cmle[cont], Cmxh[cont], hinge_pos)
+        print(angle[cont], Cl[cont], Cl_flap[cont], Cmle[cont], Cmxh[cont], par.xh)
         cont += 1
 
     # Aquí puedes hacer lo que necesites con los resultados específicos de x_h
     # Por ejemplo, podrías graficar los resultados para cada valor de x_h
-    ax1.plot(angle, Cl, color='tab:red', linestyle=linstyle[plotcont])
-    ax2.plot(angle, Cmxh, color='k', linestyle=linstyle[plotcont], label=f'x_h = {x_h}')
-    ax2.plot(angle, Cmxh, color='tab:blue', linestyle=linstyle[plotcont])
-    plotcont += 1
+    #plt.plot(angle, Cmxh, label=f'x_h = {x_h}',)
 
+    ax1.plot(angle, Cl_flap, color='tab:red',linestyle = linstyle[plotcont])
+    ax2.plot(angle, Cmxh, color='k', linestyle=linstyle[plotcont],label=f'x_h = {x_h}')
+    ax2.plot(angle, Cmxh, color='tab:blue',linestyle = linstyle[plotcont])
+
+    plotcont +=1
 # Configuración del gráfico
-plt.title('Cl flap and Cmxh hinge vs. the angle of flap deflection to different values of x_h')
+plt.title('Cl flap and Cmxh hinge vs. the angle of flap defflection to different values of x_h')
 plt.legend(loc = 'upper center')
 ax1.grid(True,axis = 'both')
 
